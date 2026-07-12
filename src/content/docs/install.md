@@ -12,7 +12,7 @@ The quickest path. Downloads the release archive for your platform, verifies it
 against the published `checksums.txt`, and installs `rackctl` to `/usr/local/bin`.
 
 ```sh
-curl -fsSL https://rackctl.ai/install.sh | sh
+curl -fsSL rackctl.com/install | sh
 ```
 
 Prefer to read before you run? The script lives in the repo at
