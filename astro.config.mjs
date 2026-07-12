@@ -15,7 +15,13 @@ export default defineConfig({
         alt: 'rackctl',
       },
       favicon: '/favicon.svg',
-      customCss: ['./src/styles/rackctl.css'],
+      // The shared shuttering theme: slate ground + rackctl's own steel accent
+      // (set in rackctl.css), then the site's fonts + brand touches.
+      customCss: [
+        '@shuttering/starlight/grounds/slate.css',
+        '@shuttering/starlight',
+        './src/styles/rackctl.css',
+      ],
       components: {
         Hero: './src/components/Hero.astro',
       },
