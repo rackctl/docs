@@ -1,0 +1,146 @@
+---
+// rackctl docs hero — overrides Starlight's oversized splash hero. Tight, dark,
+// console-styled; echoes rackctl.com: the rack mark with its green LED, a
+// terminal install line, steel key + ghost actions. Reads the page's own
+// title/tagline so it stays the semantic H1 (owns the #_top skip anchor).
+const data = Astro.locals.starlightRoute?.entry?.data ?? {};
+const title = data.title ?? 'rackctl';
+const tagline =
+  data.hero?.tagline ??
+  'One command takes an empty AWS account to a running, self-reconciling nanohype platform — then hands off to the portal for day-2.';
+const install = 'curl -fsSL rackctl.com/install | sh';
+---
+
+<section class="rk-hero" aria-labelledby="_top">
+  <div class="rk-eyebrow">
+    <svg class="rk-mark" viewBox="0 0 256 256" aria-hidden="true">
+      <rect x="56" y="59" width="144" height="34" rx="10"></rect>
+      <rect x="56" y="111" width="144" height="34" rx="10"></rect>
+      <rect x="56" y="163" width="144" height="34" rx="10"></rect>
+      <circle cx="178" cy="128" r="8" class="led"></circle>
+    </svg>
+    <span>day-0 installer</span>
+  </div>
+
+  <h1 id="_top" class="rk-title">{title}</h1>
+
+  <p class="rk-tagline">{tagline}</p>
+
+  <div class="rk-term" aria-label="install command">
+    <span class="rk-led" aria-hidden="true"></span>
+    <code><span class="rk-prompt">$</span> {install}</code>
+  </div>
+
+  <div class="rk-actions">
+    <a class="rk-btn rk-btn--key" href="/install/">Install <span aria-hidden="true">→</span></a>
+    <a class="rk-btn rk-btn--ghost" href="https://github.com/rackctl/rackctl"
+      >GitHub <span aria-hidden="true">↗</span></a
+    >
+  </div>
+</section>
+
+<style>
+  .rk-hero {
+    text-align: center;
+    padding: 1.25rem 0 0.25rem;
+  }
+  .rk-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--sl-font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--sl-color-gray-3);
+  }
+  .rk-mark {
+    width: 26px;
+    height: 26px;
+  }
+  .rk-mark rect {
+    fill: var(--rk-steel, #9bb0d0);
+  }
+  .rk-mark .led {
+    fill: #35e07a;
+  }
+  .rk-title {
+    font-size: clamp(2.3rem, 6vw, 3.1rem);
+    font-weight: 700;
+    letter-spacing: -0.035em;
+    line-height: 1;
+    margin: 0.55rem 0 0;
+  }
+  .rk-tagline {
+    color: var(--sl-color-gray-2);
+    max-width: 44ch;
+    margin: 0.8rem auto 0;
+    font-size: 1rem;
+    line-height: 1.55;
+  }
+  .rk-term {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: 1.4rem;
+    padding: 0.55rem 0.95rem;
+    background: #0b0e13;
+    border: 1px solid var(--sl-color-hairline-light, rgba(155, 176, 208, 0.16));
+    border-radius: 5px;
+    font-family: var(--sl-font-mono);
+    font-size: 0.86rem;
+    text-align: left;
+  }
+  :global(:root:not([data-theme='dark'])) .rk-term {
+    background: #0f1320;
+    color: #dbe4f2;
+  }
+  .rk-led {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #35e07a;
+    box-shadow: 0 0 8px rgba(53, 224, 122, 0.55);
+    flex-shrink: 0;
+  }
+  .rk-term .rk-prompt {
+    color: var(--rk-steel, #9bb0d0);
+  }
+  .rk-actions {
+    display: flex;
+    gap: 0.7rem;
+    justify-content: center;
+    margin-top: 1.5rem;
+  }
+  .rk-btn {
+    font-family: var(--sl-font-mono);
+    font-size: 0.82rem;
+    letter-spacing: 0.01em;
+    padding: 0.55rem 1.15rem;
+    border-radius: 4px;
+    text-decoration: none;
+    transition:
+      border-color 0.15s ease,
+      background 0.15s ease;
+  }
+  .rk-btn--key {
+    background: var(--rk-steel, #9bb0d0);
+    color: #0c0f14;
+    font-weight: 600;
+  }
+  .rk-btn--key:hover {
+    background: #b3c4de;
+  }
+  .rk-btn--ghost {
+    border: 1px solid var(--sl-color-hairline-light, rgba(155, 176, 208, 0.16));
+    color: var(--sl-color-gray-1);
+  }
+  .rk-btn--ghost:hover {
+    border-color: color-mix(in oklab, var(--rk-steel, #9bb0d0) 45%, transparent);
+  }
+  @media (max-width: 30rem) {
+    .rk-term {
+      font-size: 0.74rem;
+    }
+  }
+</style>
