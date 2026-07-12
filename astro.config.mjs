@@ -9,9 +9,16 @@ export default defineConfig({
     starlight({
       title: 'rackctl',
       description: 'The day-0 installer for a nanohype platform.',
-      logo: { src: './src/assets/mark.svg', alt: 'rackctl' },
+      logo: {
+        light: './src/assets/mark-light.svg',
+        dark: './src/assets/mark.svg',
+        alt: 'rackctl',
+      },
       favicon: '/favicon.svg',
       customCss: ['./src/styles/rackctl.css'],
+      components: {
+        Hero: './src/components/Hero.astro',
+      },
       social: [
         { icon: 'github', label: 'GitHub', href: 'https://github.com/rackctl/rackctl' },
       ],
