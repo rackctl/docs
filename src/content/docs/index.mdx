@@ -1,0 +1,99 @@
+---
+title: rackctl
+description: The day-0 installer for a nanohype platform — empty AWS account to a running, self-reconciling platform in one command.
+template: splash
+hero:
+  tagline: One command takes an empty AWS account to a running, self-reconciling nanohype platform — then hands off to the portal for day-2.
+  image:
+    file: ../../assets/mark.svg
+  actions:
+    - text: Install
+      link: /install/
+      icon: right-arrow
+    - text: View on GitHub
+      link: https://github.com/rackctl/rackctl
+      icon: external
+      variant: minimal
+---
+
+import { Card, CardGrid, Code } from '@astrojs/starlight/components';
+
+`rackctl` is the OSS bootstrapper for [nanohype](https://github.com/rackctl) — the
+agent-native platform. It automates the entire `first-deploy-aws` runbook: cloud
+substrate, EKS cluster, GitOps, controllers, and the operator portal, provisioned
+from zero and left reconciling on its own.
+
+<Code
+  code={`# dry-run plan (default)
+rackctl init -c rackctl.yaml
+
+# provision for real
+rackctl init -c rackctl.yaml --apply`}
+  lang="sh"
+  title="from empty account to running platform"
+/>
+
+## What it does
+
+<CardGrid>
+  <Card title="Full provision" icon="rocket">
+    Cloud, cluster, IAM/Identity Center, GitOps, CRDs, operator, and optional
+    portal — all from an empty AWS account. Not attach-to-existing; the whole
+    stack, kubefirst-style.
+  </Card>
+  <Card title="Dry-run by default" icon="approve-check">
+    Every `init` is a plan until you pass `--apply`. Review exactly what will be
+    created before a single cloud resource exists.
+  </Card>
+  <Card title="Orchestrates, doesn't rewrite" icon="setting">
+    A thin engine over `tofu`, `terragrunt`, `kubectl`, `helm`, `aws`, `git`, and
+    `gh`. It drives the real nanohype repos — landing-zone, eks-gitops,
+    eks-agent-platform — it doesn't reimplement them.
+  </Card>
+  <Card title="Reversible" icon="trash">
+    A phase that fails rolls back in reverse. `rackctl destroy` tears the whole
+    platform down in the opposite order it was built.
+  </Card>
+</CardGrid>
+
+## The shape of a run
+
+`rackctl init` walks an ordered pipeline. Phases 0–6 are the core 0→running path;
+7–9 are opt-in layers you enable in `rackctl.yaml`.
+
+| # | Phase | What happens |
+|---|-------|--------------|
+| 0 | Preflight | Tools, AWS identity, and service quotas |
+| 1 | Acquire | Clone + fork the platform repos |
+| 2 | Identity | Identity Center and the Terraform state backend |
+| 3 | Cluster | Network and the EKS cluster |
+| 4 | GitOps | Secrets and the ArgoCD bootstrap |
+| 5 | Addons | Addon convergence and IRSA account-id writeback |
+| 6 | Platform | Agent-platform substrate, CRDs, and the operator |
+| 7 | Fleet *(opt-in)* | Crossplane cluster control plane |
+| 8 | Portal *(opt-in)* | The day-2 operator UI |
+| 9 | Smoke *(opt-in)* | A first-tenant smoke test |
+
+See [the pipeline](/pipeline/) for the full detail, or jump to the
+[quickstart](/quickstart/).
+
+## Next
+
+<CardGrid>
+  <Card title="Install" icon="download">
+    [Get the binary](/install/) via `curl`, Homebrew, or from source.
+  </Card>
+  <Card title="Quickstart" icon="open-book">
+    [Write a `rackctl.yaml`](/quickstart/) and take an account to running.
+  </Card>
+  <Card title="Configuration" icon="list-format">
+    [Every field](/configuration/) in the `rackctl.yaml` schema.
+  </Card>
+  <Card title="Footguns" icon="warning">
+    [Read these first](/footguns/) — the sharp edges of a real provision.
+  </Card>
+</CardGrid>
+
+---
+
+Built on [nanohype](https://github.com/rackctl). Apache-2.0.

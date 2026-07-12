@@ -1,0 +1,38 @@
+/* rackctl docs theme — steel accent on a slate ground, matching the CLI/web brand.
+   Layers over Starlight's defaults via custom CSS properties. */
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root {
+  --sl-font: 'Space Grotesk', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --sl-font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* steel accent — light theme */
+  --sl-color-accent-low: #d6ddea;
+  --sl-color-accent: #4a5878;
+  --sl-color-accent-high: #29344a;
+}
+
+:root[data-theme='dark'] {
+  /* steel accent — dark theme (#9bb0d0 is the brand steel) */
+  --sl-color-accent-low: #172033;
+  --sl-color-accent: #9bb0d0;
+  --sl-color-accent-high: #dbe4f2;
+
+  /* slate ground */
+  --sl-color-bg: #0c0f14;
+  --sl-color-bg-nav: #0c0f14;
+  --sl-color-bg-sidebar: #0e121a;
+  --sl-color-bg-inline-code: #171c26;
+  --sl-color-hairline-shade: #1c2331;
+}
+
+/* wordmark — tighten to match the brand lockup */
+.site-title {
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+/* code blocks read as a control-panel readout */
+:root[data-theme='dark'] .expressive-code .frame {
+  --code-background: #0e121a;
+}
