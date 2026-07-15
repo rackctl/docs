@@ -3,7 +3,7 @@
 The documentation site for [rackctl](https://github.com/rackctl/rackctl) — the
 day-0 installer for a nanohype platform. Built with [Astro](https://astro.build)
 and [Starlight](https://starlight.astro.build), deployed to
-[docs.rackctl.ai](https://docs.rackctl.ai) on AWS.
+[docs.rackctl.sh](https://docs.rackctl.sh) on AWS.
 
 ## Develop
 
