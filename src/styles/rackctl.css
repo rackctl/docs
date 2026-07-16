@@ -2,11 +2,11 @@
    The slate ground and the low-border chrome come from the shared theme; this
    file supplies only what's rackctl's own: the operator-console typefaces and the
    exact steel accent (also exposed as --rk-steel* for the custom Hero). */
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap");
 
 :root {
-  --font-sans-face: 'Space Grotesk', ui-sans-serif, system-ui, -apple-system, sans-serif;
-  --font-mono-face: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-sans-face: "Space Grotesk", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono-face: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 
   /* rackctl steel — the site's accent. Overrides the shared palette seam with
      rackctl's exact values, and exposes the brand shades the Hero references. */
@@ -15,6 +15,6 @@
   --rk-steel-bright: #c2d0e6;
   --rk-steel-deep: #4a5878;
 }
-:root[data-theme='light'] {
+:root[data-theme="light"] {
   --primary: #4a5878;
 }
