@@ -78,20 +78,60 @@ Tears the platform down, running the landing-zone components in the **reverse** 
 the order they were applied.
 
 ```sh
-rackctl destroy [-c rackctl.yaml] [--apply]
+rackctl destroy [-c rackctl.yaml] [--apply] [--force-buckets]
 ```
 
 | Flag | Default | Description |
 |------|---------|-------------|
 | `-c, --config` | `rackctl.yaml` | Path to the config file. |
 | `--apply` | `false` | Actually destroy. **Without it, `destroy` is a dry-run plan.** |
+| `--force-buckets` | `false` | Permit non-empty buckets to be emptied. Two acts — see below. |
 
-Destroy order is `cluster-addons → cluster-bootstrap → secrets → cluster →
-network`.
+Teardown runs controller-owned resources first (Platforms, Tenants, NodeClaims,
+PVCs — so finalizers release their cloud resources while the controllers are still
+alive), then the eks-agent-platform terraform tree, then the landing-zone components
+in reverse.
+
+The agent-platform tree comes down **before** landing-zone, not after: its components
+resolve landing-zone's SSM parameters through unguarded `data` blocks, and Terraform
+evaluates data sources during a destroy plan too — so tearing landing-zone down first
+leaves them unable to plan their own teardown.
+
+### `--force-buckets`
+
+Outside `development`, several buckets rackctl creates refuse a destroy while
+non-empty. `force_destroy` has no effect until a successful apply has landed it in
+state, so permitting a teardown and performing one are necessarily **two acts**:
+`--force-buckets` applies the owning components with `force_destroy_buckets=true`,
+then destroys.
+
+:::caution[It empties the local restore points]
+This deletes the cluster's velero, loki and tempo buckets. The composition upstream
+documents as safe — set `velero_backup_policy` first so the central plan copies the
+recovery points to the backup account's DR region — is not reachable through rackctl,
+which has no field for it and does not apply the `backup` component.
+:::
+
+Two gaps it does **not** cover, both disclosed at runtime rather than papered over:
+
+- **druid outside development.** Its Aurora carries `deletion_protection = true`,
+  pinned in the staging and production leaves inside a `map(object)` no `TF_VAR` can
+  reach without replacing the leaf's sizing too. rackctl refuses that teardown rather
+  than deleting the deepstorage segments and then wedging on `DeleteDBCluster`. Clear
+  `deletion_protection` out of band first.
+- **eks-agent-platform's `bedrock` and `cost-pipeline` buckets**, which do not accept
+  `force_destroy_buckets` at all yet.
 
 :::danger
 `destroy --apply` removes cloud resources and is not reversible. Confirm the
 account, region, and profile in the printed title before you run it.
+
+If this cluster is an **eks-fleet hub** with spoke clusters still vended, `destroy`
+refuses. Each spoke is a real EKS cluster — its own control plane, VPC and NAT
+gateways, often in another AWS account — and this hub is the only place they are
+tracked. Delete them first with
+`kubectl delete clusters.fleet.nanohype.dev --all -A --wait` and let Crossplane tear
+them down.
 :::
 
 ## version

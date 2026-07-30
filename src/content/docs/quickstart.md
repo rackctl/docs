@@ -14,6 +14,19 @@ You'll need:
 - The [prerequisite tools](/install/#prerequisites) on your `PATH`.
 - A GitHub account with `gh` authenticated (`gh auth login`) — `rackctl` forks the platform repos into your org.
 
+  `gh auth login` is enough on its own. If you set `org.gitops.tenantsRepo` (which
+  `controlPlane.portal` requires), `rackctl` also registers a read-only deploy key on that
+  repo, and the Terraform GitHub provider that does it reads **`GITHUB_TOKEN`** — a
+  variable `gh auth login` never exports, because it stores the credential in `gh`'s own
+  keyring. `rackctl` bridges the gap by asking `gh` for the token at apply time, so the
+  `gh auth login` path works as written. Your login needs **`repo` scope** for the deploy
+  key to register. If you'd rather be explicit, export it yourself and `rackctl` uses that
+  instead:
+
+  ```sh
+  export GITHUB_TOKEN=$(gh auth token)
+  ```
+
 Confirm your environment first:
 
 ```sh
@@ -23,6 +36,10 @@ rackctl doctor
 
 `doctor` checks the tools are present and that your AWS identity resolves. Fix
 anything it flags before continuing.
+
+`rackctl init` additionally runs a **preflight** gate that refuses to start when the
+install could not succeed — including a missing GitHub credential when your config needs
+one. It checks before spending anything, rather than failing an hour in.
 
 ## 1. Write a `rackctl.yaml`
 

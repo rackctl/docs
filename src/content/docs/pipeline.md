@@ -39,8 +39,9 @@ GitOps state to write to.
 
 ### 2 · Identity
 
-Stands up Identity Center (when `cloud.identityCenter.manage` is set) and the
-Terraform/OpenTofu remote state backend the landing-zone components use.
+Creates the Terraform/OpenTofu remote state backend the landing-zone components use —
+a versioned, encrypted, public-access-blocked S3 bucket named
+`<account>-<region>-tfstate`.
 
 ### 3 · Cluster
 
