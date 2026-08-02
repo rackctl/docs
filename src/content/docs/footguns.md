@@ -4,15 +4,18 @@ description: The sharp edges of a real full-provision — read these before your
 ---
 
 `rackctl` provisions real, billable infrastructure against your own AWS account.
-These are the edges worth knowing before your first `--apply`. Most are caught by
-[validation](/configuration/#validation) or [`doctor`](/commands/#doctor) — a few
+These are the edges worth knowing before your first `rackctl apply`. Most are caught by
+[validation](/configuration/#validation) or [`check`](/commands/#check) — a few
 are just the physics of provisioning a cloud.
 
-## 1. Dry-run is the default — and so is *nothing happening*
+## 1. The verb decides whether anything is written
 
-`rackctl init` and `rackctl destroy` are **plans** until you add `--apply`. If you
-expected resources and got none, you probably omitted `--apply`. Conversely: never
-paste `--apply` into a command you haven't read the plan for.
+`rackctl plan` is read-only. `rackctl apply` provisions and spends. `rackctl destroy`
+tears down and asks you to type the cluster name first.
+
+There is no mode flag: the intent is the verb, at the front of the line where it is read,
+rather than five characters at the end that make the dangerous command look almost exactly
+like the harmless one.
 
 ## 2. Production forbids a public API endpoint
 
@@ -53,9 +56,9 @@ or the agent platform will come up without the models it expects.
 
 ## 7. `destroy` is reverse and irreversible
 
-`rackctl destroy --apply` removes cloud resources in the reverse of the apply
+`rackctl destroy` removes cloud resources in the reverse of the apply
 order. There's no undo. The command prints the org, region, and environment in its
-title — read that line before you confirm. When in doubt, run it without `--apply`
+title — read that line before you confirm. When in doubt, run it with `--dry-run`
 first and read the plan.
 
 ## 8. Rollback can leave a partial state
