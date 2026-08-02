@@ -3,7 +3,7 @@ title: The pipeline
 description: The ordered 0→running bootstrap rackctl walks — ten phases, what each does, and how rollback works.
 ---
 
-`rackctl init` walks an ordered pipeline. Phases 0–6 are the core 0→running path
+`rackctl apply` walks an ordered pipeline. Phases 0–6 are the core 0→running path
 (AWS-only, v1); phases 7–9 are opt-in layers you turn on in
 [`rackctl.yaml`](/configuration/#controlplane). Each phase orchestrates the
 existing nanohype repos — landing-zone (Terragrunt), eks-gitops (ArgoCD catalog),
@@ -104,6 +104,6 @@ place for debugging.
 
 ## Dry-run
 
-Until you pass `--apply`, every phase prints the commands it *would* run and
+Under `rackctl plan`, every phase prints the commands it *would* run and
 changes nothing. Read the plan before you provision — see the
 [quickstart](/quickstart/#2-dry-run).

@@ -31,13 +31,13 @@ Confirm your environment first:
 
 ```sh
 aws sso login --profile workload-dev
-rackctl doctor
+rackctl check
 ```
 
 `doctor` checks the tools are present and that your AWS identity resolves. Fix
 anything it flags before continuing.
 
-`rackctl init` additionally runs a **preflight** gate that refuses to start when the
+`rackctl apply` additionally runs a **preflight** gate that refuses to start when the
 install could not succeed — including a missing GitHub credential when your config needs
 one. It checks before spending anything, rather than failing an hour in.
 
@@ -78,11 +78,12 @@ example lives in the repo at
 
 ## 2. Dry-run
 
-`init` is a **plan by default** — it prints every phase and the commands it would
-run, and touches nothing in the cloud.
+`rackctl plan` prints every phase and the commands a provision would run, and touches
+nothing in the cloud. It does make read-only AWS calls — that is how the destructive
+sweeps show you what they would select rather than restating their own filters.
 
 ```sh
-rackctl init -c rackctl.yaml
+rackctl plan -c rackctl.yaml
 ```
 
 Read the plan. This is your chance to catch a wrong account id, region, or profile
@@ -91,7 +92,7 @@ before anything is created.
 Want to watch it as a live progress view instead of a scrolling log?
 
 ```sh
-rackctl init -c rackctl.yaml --tui
+rackctl apply -c rackctl.yaml --tui
 ```
 
 ## 3. Apply
@@ -99,7 +100,7 @@ rackctl init -c rackctl.yaml --tui
 When the plan looks right, provision for real:
 
 ```sh
-rackctl init -c rackctl.yaml --apply
+rackctl apply -c rackctl.yaml
 ```
 
 `rackctl` walks the [pipeline](/pipeline/) in order. If a phase fails, it rolls the
@@ -109,7 +110,7 @@ resources in place for debugging.
 ## 4. Confirm
 
 ```sh
-rackctl doctor
+rackctl check
 ```
 
 Once the cluster is up, `doctor` also checks it's reachable and that ArgoCD
@@ -120,7 +121,7 @@ applications are present and syncing.
 From here, day-2 operations move to the portal (enable it with
 `controlPlane.portal: true`). `rackctl` stays for lifecycle:
 
-- [`rackctl upgrade`](/commands/#upgrade) — pull the latest addon catalog and bump the operator.
+- [`rackctl apply`](/commands/#apply) — re-runnable: it syncs the catalog fork and re-applies, so it is also the upgrade path.
 - [`rackctl destroy`](/commands/#destroy) — tear the platform down in reverse.
 
 ## Next

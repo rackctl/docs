@@ -10,7 +10,7 @@ doing deliberately. This is the sequence.
 
 ```sh
 aws sso login --profile <your-profile>
-rackctl doctor
+rackctl check
 ```
 
 `doctor` confirms the tools are present and your AWS identity resolves. Don't
@@ -28,7 +28,7 @@ most when wrong:
 ## 3. Plan
 
 ```sh
-rackctl init -c rackctl.yaml
+rackctl plan -c rackctl.yaml
 ```
 
 Read it. The plan lists every phase and the commands it will run. This is the last
@@ -38,7 +38,7 @@ unexpected addon — stop and fix the config, not the running provision.
 ## 4. Apply
 
 ```sh
-rackctl init -c rackctl.yaml --apply --tui
+rackctl apply -c rackctl.yaml --tui
 ```
 
 `--tui` gives a live progress view. Let it run. The long poles are the cluster
@@ -49,13 +49,13 @@ If a phase fails, the engine rolls back completed phases in reverse. To stop tha
 and inspect the state instead:
 
 ```sh
-rackctl init -c rackctl.yaml --apply --no-clean-on-failure
+rackctl apply -c rackctl.yaml --no-clean-on-failure
 ```
 
 ## 5. Verify
 
 ```sh
-rackctl doctor
+rackctl check
 ```
 
 With a cluster up, `doctor` also checks it's reachable and that ArgoCD applications
@@ -76,7 +76,7 @@ Core platform is up and reconciling. Day-2 work moves to the portal (enable it w
 ### Upgrade
 
 ```sh
-rackctl upgrade -c rackctl.yaml
+rackctl apply -c rackctl.yaml   # apply syncs the catalog fork and re-applies
 ```
 
 Pulls the latest addon catalog and bumps the operator; ArgoCD reconciles the rest.
@@ -85,7 +85,7 @@ Pulls the latest addon catalog and bumps the operator; ArgoCD reconciles the res
 
 ```sh
 rackctl destroy -c rackctl.yaml            # plan
-rackctl destroy -c rackctl.yaml --apply    # reverse teardown
+rackctl destroy -c rackctl.yaml            # reverse teardown (confirms first)
 ```
 
 ## Troubleshooting

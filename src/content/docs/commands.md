@@ -21,56 +21,59 @@ Available Commands:
 All lifecycle commands read a [`rackctl.yaml`](/configuration/) and export
 `AWS_PROFILE` and `AWS_REGION` from it before shelling out.
 
-## init
+## plan
 
-Provisions the platform by walking the [pipeline](/pipeline/) in order.
+Walks the [pipeline](/pipeline/) in order and prints every command a provision would run.
+Creates nothing.
+
+It does make read-only AWS calls, and that is the point rather than a side effect: the
+sweeps that delete resources outside Terraform's state enumerate for real and show what
+they would select. A plan that queried nothing could only restate its own filters back.
 
 ```sh
-rackctl init [flags]
+rackctl plan -c rackctl.yaml
+```
+
+## apply
+
+Provisions the platform by walking the same pipeline. **This writes, and it spends.**
+
+Re-runnable by design — it is how you retry after a failure and how you re-apply a config
+change. It is also the upgrade path: `apply` syncs the catalog fork from upstream and
+re-applies, so there is no separate upgrade command. A run that finds the platform already
+standing will not tear it down.
+
+`check` runs first as a gate and refuses to spend when it fails.
+
+```sh
+rackctl apply [flags]
 ```
 
 | Flag | Default | Description |
 |------|---------|-------------|
 | `-c, --config` | `rackctl.yaml` | Path to the config file. |
-| `--apply` | `false` | Provision for real. **Without it, `init` is a dry-run plan.** |
 | `--no-clean-on-failure` | `false` | Leave resources in place if a phase fails (default is reverse rollback). |
 | `--tui` | `false` | Interactive TUI progress view instead of a scrolling log. |
+| `--skip-preflight` | `false` | Provision even when the checks say the install cannot succeed. |
 
 ```sh
-# plan
-rackctl init -c rackctl.yaml
-
 # provision, watching a live progress view
-rackctl init -c rackctl.yaml --apply --tui
+rackctl apply -c rackctl.yaml --tui
 ```
 
-## doctor
-
-Checks prerequisites and, if a cluster exists, its health. Safe to run anytime.
+## check
 
 ```sh
-rackctl doctor
+rackctl check [flags]
 ```
 
-It verifies, in order:
+Asserts what is knowable right now. With no cluster, the pre-spend set: can this install
+succeed at all? With a live cluster, those plus the invariants of a provisioned platform.
 
-1. The [required tools](/install/#prerequisites) are on your `PATH`.
-2. Your AWS identity resolves (`aws sts get-caller-identity`) — otherwise it
-   nudges you to `aws sso login`.
-3. If a cluster is in your kubeconfig, that it's reachable and that ArgoCD
-   applications are present.
+One command rather than two, because picking between them correctly required already
+knowing whether a cluster exists — which the tool looks up.
 
-## upgrade
-
-Moves the platform to a newer nanohype release.
-
-```sh
-rackctl upgrade [-c rackctl.yaml]
-```
-
-It pulls the latest eks-gitops addon catalog (`git pull --ff-only`) and bumps the
-operator chart (`helm upgrade --install`). ArgoCD then reconciles the catalog to
-match.
+Read-only, and exits non-zero, so it gates a deploy.
 
 ## destroy
 
@@ -78,13 +81,14 @@ Tears the platform down, running the landing-zone components in the **reverse** 
 the order they were applied.
 
 ```sh
-rackctl destroy [-c rackctl.yaml] [--apply] [--force-buckets]
+rackctl destroy [-c rackctl.yaml] [--yes] [--dry-run] [--force-buckets]
 ```
 
 | Flag | Default | Description |
 |------|---------|-------------|
 | `-c, --config` | `rackctl.yaml` | Path to the config file. |
-| `--apply` | `false` | Actually destroy. **Without it, `destroy` is a dry-run plan.** |
+| `--yes` | `false` | Skip the confirmation prompt, for CI and scripted teardowns. |
+| `--dry-run` | `false` | Show what would be destroyed and touch nothing. |
 | `--force-buckets` | `false` | Permit non-empty buckets to be emptied. Two acts — see below. |
 
 Teardown runs controller-owned resources first (Platforms, Tenants, NodeClaims,
@@ -123,7 +127,7 @@ Two gaps it does **not** cover, both disclosed at runtime rather than papered ov
   `force_destroy_buckets` at all yet.
 
 :::danger
-`destroy --apply` removes cloud resources and is not reversible. Confirm the
+`rackctl destroy` removes cloud resources and is not reversible. Confirm the
 account, region, and profile in the printed title before you run it.
 
 If this cluster is an **eks-fleet hub** with spoke clusters still vended, `destroy`
@@ -145,7 +149,7 @@ Prints the version, set at build time via `-ldflags`.
 ## Global behavior
 
 - **Dry-run is the default** for `init` and `destroy`. Nothing changes in the
-  cloud until you pass `--apply`.
+  cloud. `plan` never writes; `apply` and `destroy` always do.
 - Config is validated before any command does work — see
   [validation](/configuration/#validation).
 - Errors and usage are printed cleanly (no cobra stack noise) so failures are easy

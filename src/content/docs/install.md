@@ -61,7 +61,7 @@ bundle them. Install these and make sure they're on your `PATH`:
 | `git` | Clones and manages the platform repos |
 | `gh` | GitHub CLI — forks the org repos |
 
-Run [`rackctl doctor`](/commands/#doctor) to confirm they're all present and that
+Run [`rackctl check`](/commands/#check) to confirm they're all present and that
 your AWS identity resolves before you provision anything.
 
 ## Next
