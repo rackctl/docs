@@ -160,7 +160,17 @@ Optional cluster addons synced through the GitOps catalog.
 | Field | Type | Default | Notes |
 |-------|------|---------|-------|
 | `addons.druid` | bool | `false` | Per-tenant analytics substrate — Aurora Serverless, optionally MSK. Real money; its live leaf carries its own tenant sizing map. |
-| `addons.accelerators` | bool | `false` | Labels the cluster so the accelerators ApplicationSet (gpu-operator, nvidia-dra-driver) targets it. Leave off without GPU nodes: the driver cannot pull its image without an NGC key and has nothing to schedule on. |
+
+:::caution[`addons.accelerators` is retired]
+The GPU path has been removed: the accelerators ApplicationSet, the `accelerator-pools`
+component and its live roots, and the cluster label they were selected by. The model path is
+Bedrock — see [`agentPlatform`](#agentplatform).
+
+A config still carrying `addons.accelerators` is **refused at load**, not ignored. rackctl's
+YAML decoder drops keys it does not recognise, so silently accepting a retired one would let a
+config ask for a thing and get nothing, forever, without a word. The refusal names the key and
+what happened to it.
+:::
 
 ## `dns`
 
