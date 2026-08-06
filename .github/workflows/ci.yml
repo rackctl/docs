@@ -41,14 +41,23 @@ jobs:
             --recursive
             ./
 
+      # Lint / format gate. Biome checks and formats the source in one pass, exiting
+      # non-zero on any lint violation or unformatted file.
+      #
+      # It is a devDependency rather than an `npx --yes` fetch. The npx form was chosen to
+      # avoid touching the lockfile while .npmrc pointed at a private registry — but that
+      # registry is scoped to @shuttering, and biome comes from npmjs, so there was nothing
+      # to avoid. Two things follow from moving it in: the version is enforced by the
+      # lockfile rather than by a string in a script, and osv-scanner covers it, which it
+      # cannot do for a package that is downloaded after the scan has already run.
+      #
+      # Ahead of the type check and build because it is the fastest gate here by two orders
+      # of magnitude, and failing in 11ms beats failing after a full Astro build.
+      - name: lint (biome)
+        run: pnpm run lint
+
       - name: Type check
         run: pnpm check
 
       - name: Build
         run: pnpm build
-
-      # Lint / format gate. Biome (pinned via npx to avoid a private-registry
-      # lockfile change) checks and formats the source in one pass, exiting
-      # non-zero on any lint violation or unformatted file.
-      - name: lint (biome)
-        run: pnpm run lint
