@@ -909,7 +909,7 @@ packages:
         optional: true
 
   '@shuttering/starlight@https://registry.npmjs.org/@shuttering/starlight/-/starlight-0.2.0.tgz':
-    resolution: {integrity: sha512-t00cUZj8B8TyeDFGEn2HMaVQr106X88Ny3NmGTuidiCktBT7LnQ2EuKS8SnwTPczAwOi3yiAYKRm6hKubMWFrw==}
+    resolution: {tarball: https://registry.npmjs.org/@shuttering/starlight/-/starlight-0.2.0.tgz}
     version: 0.2.0
     peerDependencies:
       '@astrojs/starlight': '>=0.41.0'
