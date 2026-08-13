@@ -20,19 +20,18 @@
     "@astrojs/starlight": "^0.41.3",
     "@fontsource-variable/jetbrains-mono": "^5.3.0",
     "@fontsource-variable/space-grotesk": "^5.3.0",
-    "@shuttering/starlight": "^0.2.0",
+    "@shuttering/starlight": "^0.2.1",
     "astro": "^7.1.6",
     "sharp": "^0.35.3"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.9",
     "@biomejs/biome": "2.5.3",
-    "@shuttering/error-pages": "^0.3.0",
+    "@shuttering/error-pages": "0.3.3",
     "typescript": "^5.9.3"
   },
   "pnpm": {
     "overrides": {
-      "@shuttering/starlight": "https://registry.npmjs.org/@shuttering/starlight/-/starlight-0.2.0.tgz",
       "fast-uri": "^3.1.4",
       "postcss": "^8.5.18"
     }

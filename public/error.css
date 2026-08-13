@@ -17,9 +17,9 @@
   --destructive-foreground: #ffffff;
   --border: #e3e6ec;
   --input: #dde1e9;
-  --dim: #6b7385;
-  --success: #2f9e5a;
-  --warning: #a07d1a;
+  --dim: #6a7183;
+  --success: #27824a;
+  --warning: #8d6e17;
   --scrollbar-thumb: #bcc2ce;
   --primary: #4a5878;
   --primary-foreground: #ffffff;
@@ -27,7 +27,7 @@
   --gradient-brand: linear-gradient(135deg, #4a5878 0%, #8090b0 52%, #c4ccdc 100%);
   --radius: 0.1875rem;
   --font-sans: var(--font-sans-face, system-ui, -apple-system, sans-serif);
-  --font-display: var(--font-display-face, Georgia, 'Times New Roman', serif);
+  --font-display: var(--font-display-face, Georgia, "Times New Roman", serif);
   --font-mono: var(--font-mono-face, ui-monospace, SFMono-Regular, Menlo, monospace);
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --duration-slow: 260ms;
@@ -51,7 +51,7 @@
   --destructive-foreground: #0c0f14;
   --border: rgba(155, 176, 208, 0.1);
   --input: rgba(155, 176, 208, 0.14);
-  --dim: #5b6a86;
+  --dim: #76839a;
   --success: #4fb06f;
   --warning: #d6a95c;
   --scrollbar-thumb: #3a4451;
