@@ -16,6 +16,12 @@ importers:
       '@astrojs/starlight':
         specifier: ^0.41.3
         version: 0.41.3(astro@7.1.6(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.2)(@types/node@24.13.3)(yaml@2.9.0))(typescript@5.9.3)
+      '@fontsource-variable/jetbrains-mono':
+        specifier: ^5.3.0
+        version: 5.3.0
+      '@fontsource-variable/space-grotesk':
+        specifier: ^5.3.0
+        version: 5.3.0
       '@shuttering/starlight':
         specifier: https://registry.npmjs.org/@shuttering/starlight/-/starlight-0.2.0.tgz
         version: https://registry.npmjs.org/@shuttering/starlight/-/starlight-0.2.0.tgz(@astrojs/starlight@0.41.3(astro@7.1.6(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.2)(@types/node@24.13.3)(yaml@2.9.0))(typescript@5.9.3))(astro@7.1.6(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.2)(@types/node@24.13.3)(yaml@2.9.0))
@@ -518,8 +524,14 @@ packages:
   '@fontsource-variable/fraunces@5.2.9':
     resolution: {integrity: sha512-Y6IjunlN9Ni723np+GIgAaKzCDBrPRrqNi01TZxHs5wtHYROWFM9W6yiT+/gGwSjWIRD18oX17kD/BRWekc/Lw==}
 
+  '@fontsource-variable/jetbrains-mono@5.3.0':
+    resolution: {integrity: sha512-F32xpS2NsGYoQi2ADSkKTgpJj7ozajsGgDJ8woTnqjmIB+dxDIqImjl4pXZVEExu8UFZ2ndhmX18EBS/hdz3Lw==}
+
   '@fontsource-variable/schibsted-grotesk@5.2.8':
     resolution: {integrity: sha512-nZAorDrFue4dXZbI613WdvAhu5DPH1UJYNn5fWl7Poa+nl/s9o3VUcQImIiVZpQnYG/jkPVzHsTE7WZbSDvvkw==}
+
+  '@fontsource-variable/space-grotesk@5.3.0':
+    resolution: {integrity: sha512-2IxmvfB08i9vnGB3Ym/AXvhRE+8XOjWMXIyDum03c+tPwH0FUoMNQfGpU8NXPxjbws0Vvss3AH0Zqt4oJBBAdw==}
 
   '@fontsource-variable/spline-sans-mono@5.2.8':
     resolution: {integrity: sha512-Z1yYiEtP+8Gll5BJaR9dICK/ZTxoTWH+ZBH6rOTMWajPSOxwl7IZplkwX2J1QhMxqulhhdMrkRx6SkkLM+jLQw==}
@@ -897,7 +909,7 @@ packages:
         optional: true
 
   '@shuttering/starlight@https://registry.npmjs.org/@shuttering/starlight/-/starlight-0.2.0.tgz':
-    resolution: {tarball: https://registry.npmjs.org/@shuttering/starlight/-/starlight-0.2.0.tgz}
+    resolution: {integrity: sha512-t00cUZj8B8TyeDFGEn2HMaVQr106X88Ny3NmGTuidiCktBT7LnQ2EuKS8SnwTPczAwOi3yiAYKRm6hKubMWFrw==}
     version: 0.2.0
     peerDependencies:
       '@astrojs/starlight': '>=0.41.0'
@@ -3015,7 +3027,11 @@ snapshots:
 
   '@fontsource-variable/fraunces@5.2.9': {}
 
+  '@fontsource-variable/jetbrains-mono@5.3.0': {}
+
   '@fontsource-variable/schibsted-grotesk@5.2.8': {}
+
+  '@fontsource-variable/space-grotesk@5.3.0': {}
 
   '@fontsource-variable/spline-sans-mono@5.2.8': {}
 
