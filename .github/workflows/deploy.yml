@@ -49,7 +49,7 @@ jobs:
 
       - name: Sync and invalidate
         env:
-          BUCKET: rackctl-docs-site
+          BUCKET: rackctl-docs-site-477165397189
           DISTRIBUTION_ID: ${{ vars.DOCS_DISTRIBUTION_ID }}
         run: |
           aws s3 sync dist/ "s3://$BUCKET/" --delete
