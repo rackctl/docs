@@ -5,7 +5,6 @@ settings:
   excludeLinksFromLockfile: false
 
 overrides:
-  '@shuttering/starlight': https://registry.npmjs.org/@shuttering/starlight/-/starlight-0.2.0.tgz
   fast-uri: ^3.1.4
   postcss: ^8.5.18
 
@@ -16,9 +15,15 @@ importers:
       '@astrojs/starlight':
         specifier: ^0.41.3
         version: 0.41.3(astro@7.1.6(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.2)(@types/node@24.13.3)(yaml@2.9.0))(typescript@5.9.3)
+      '@fontsource-variable/jetbrains-mono':
+        specifier: ^5.3.0
+        version: 5.3.0
+      '@fontsource-variable/space-grotesk':
+        specifier: ^5.3.0
+        version: 5.3.0
       '@shuttering/starlight':
-        specifier: https://registry.npmjs.org/@shuttering/starlight/-/starlight-0.2.0.tgz
-        version: https://registry.npmjs.org/@shuttering/starlight/-/starlight-0.2.0.tgz(@astrojs/starlight@0.41.3(astro@7.1.6(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.2)(@types/node@24.13.3)(yaml@2.9.0))(typescript@5.9.3))(astro@7.1.6(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.2)(@types/node@24.13.3)(yaml@2.9.0))
+        specifier: ^0.2.1
+        version: 0.2.1(@astrojs/starlight@0.41.3(astro@7.1.6(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.2)(@types/node@24.13.3)(yaml@2.9.0))(typescript@5.9.3))(astro@7.1.6(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.2)(@types/node@24.13.3)(yaml@2.9.0))
       astro:
         specifier: ^7.1.6
         version: 7.1.6(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.2)(@types/node@24.13.3)(yaml@2.9.0)
@@ -33,8 +38,8 @@ importers:
         specifier: 2.5.3
         version: 2.5.3
       '@shuttering/error-pages':
-        specifier: ^0.3.0
-        version: 0.3.0(vitest@4.1.10(@types/node@24.13.3)(vite@8.1.4(@types/node@24.13.3)(esbuild@0.28.1)(yaml@2.9.0)))
+        specifier: 0.3.3
+        version: 0.3.3(vitest@4.1.10(@types/node@24.13.3)(vite@8.1.4(@types/node@24.13.3)(esbuild@0.28.1)(yaml@2.9.0)))
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
@@ -518,8 +523,14 @@ packages:
   '@fontsource-variable/fraunces@5.2.9':
     resolution: {integrity: sha512-Y6IjunlN9Ni723np+GIgAaKzCDBrPRrqNi01TZxHs5wtHYROWFM9W6yiT+/gGwSjWIRD18oX17kD/BRWekc/Lw==}
 
+  '@fontsource-variable/jetbrains-mono@5.3.0':
+    resolution: {integrity: sha512-F32xpS2NsGYoQi2ADSkKTgpJj7ozajsGgDJ8woTnqjmIB+dxDIqImjl4pXZVEExu8UFZ2ndhmX18EBS/hdz3Lw==}
+
   '@fontsource-variable/schibsted-grotesk@5.2.8':
     resolution: {integrity: sha512-nZAorDrFue4dXZbI613WdvAhu5DPH1UJYNn5fWl7Poa+nl/s9o3VUcQImIiVZpQnYG/jkPVzHsTE7WZbSDvvkw==}
+
+  '@fontsource-variable/space-grotesk@5.3.0':
+    resolution: {integrity: sha512-2IxmvfB08i9vnGB3Ym/AXvhRE+8XOjWMXIyDum03c+tPwH0FUoMNQfGpU8NXPxjbws0Vvss3AH0Zqt4oJBBAdw==}
 
   '@fontsource-variable/spline-sans-mono@5.2.8':
     resolution: {integrity: sha512-Z1yYiEtP+8Gll5BJaR9dICK/ZTxoTWH+ZBH6rOTMWajPSOxwl7IZplkwX2J1QhMxqulhhdMrkRx6SkkLM+jLQw==}
@@ -887,24 +898,20 @@ packages:
   '@shikijs/vscode-textmate@10.0.2':
     resolution: {integrity: sha512-83yeghZ2xxin3Nj8z1NMd/NCuca+gsYXswywDy5bHvwlWL8tpTQmzGeUuHd9FC3E/SBEMvzJRwWEOz5gGes9Qg==}
 
-  '@shuttering/error-pages@0.3.0':
-    resolution: {integrity: sha512-fEUWx1sPSP/sqS+ekQDYOAJLmrBxUG8BBITgoHbRvCRyBYJsVRDg9CrSt4FvgtbPSVva/9h1HoSam66jgj128A==, tarball: https://npm.pkg.github.com/download/@shuttering/error-pages/0.3.0/8e9f3d556bc3e6bf8922bb1db6ba9c1969be11c0}
+  '@shuttering/error-pages@0.3.3':
+    resolution: {integrity: sha512-tryCW/LZF6loH+8kZYwcE81Sr7wUwLR5lQVd6DRj+PkippRj+K0DyZprfPCZLVsqKttBBJIJtgau1FMdsghtbg==, tarball: https://npm.pkg.github.com/download/@shuttering/error-pages/0.3.3/ba58fbe55a7fef7b18e954f6d66e3ea6336a8476}
     hasBin: true
     peerDependencies:
       vitest: '>=4'
-    peerDependenciesMeta:
-      vitest:
-        optional: true
 
-  '@shuttering/starlight@https://registry.npmjs.org/@shuttering/starlight/-/starlight-0.2.0.tgz':
-    resolution: {tarball: https://registry.npmjs.org/@shuttering/starlight/-/starlight-0.2.0.tgz}
-    version: 0.2.0
+  '@shuttering/starlight@0.2.1':
+    resolution: {integrity: sha512-tQlpU6w03JWWI7gPClfd6mFJNSUn3QT95qRbmhL6losk1/SbJdd1rYFI8E3FJ5c+TO2gPdrOPCnaJ9ZEfwfi4Q==, tarball: https://npm.pkg.github.com/download/@shuttering/starlight/0.2.1/c26e297cf54b542e5363215a679347267ea23fe2}
     peerDependencies:
       '@astrojs/starlight': '>=0.41.0'
       astro: '>=5.0.0'
 
-  '@shuttering/tokens@0.5.0':
-    resolution: {integrity: sha512-bZTtBssD66BdD2zmEH8sWYV+XCaCuZjTyrsej3sRyfzINzRpR7r9XB0GAiz2inG91xnLWFKnwzvT1obRu3hXVw==, tarball: https://npm.pkg.github.com/download/@shuttering/tokens/0.5.0/6550088f13bc8ba43ff3aafeb96608ef93e95357}
+  '@shuttering/tokens@0.8.0':
+    resolution: {integrity: sha512-qYoJKwd1DRKRzWzZ0NGSemJTVW5Wk6VwN2vxOmM0lGYHT9MQ3fVOVE6NWJUkZSTF5S5YAUkbqL4gL/Rq+F+ABA==, tarball: https://npm.pkg.github.com/download/@shuttering/tokens/0.8.0/3feac1e3752937ddf2800a3dbf993a4fc3055a35}
 
   '@standard-schema/spec@1.1.0':
     resolution: {integrity: sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w==}
@@ -1504,8 +1511,8 @@ packages:
     resolution: {integrity: sha512-+Pgi+vMuUNkJyExiMBt5IlFoMyKnr5zhJ4Uspz58WOhBF5QoIZkFyNHIbBAtHwzVAgk5RtndVNsDRN61/mmDqg==}
     engines: {node: '>=12'}
 
-  js-yaml@4.3.0:
-    resolution: {integrity: sha512-1td788aAnnZ5qs7V2QIRl1owjtYpbKt749Y3xauqQgwIIGF/xXWz1wMTEBx5O3LK3lXLVuqXPdPxj2BoFHaW9Q==}
+  js-yaml@4.3.1:
+    resolution: {integrity: sha512-CY6crGq313MX8GkwvB7tzgp99vjQxY1++5y10/BKN/GUfHqWaOGQMNZkBvqSzsZKWk/ijwHlWzzkLulsGHhjWQ==}
     hasBin: true
 
   json-schema-traverse@1.0.0:
@@ -1800,8 +1807,8 @@ packages:
   muggle-string@0.4.1:
     resolution: {integrity: sha512-VNTrAak/KhO2i8dqqnqnAHOa3cYBwXEZe9h+D5h/1ZqFSTEFHdM65lR7RoIqq3tBBYavsOXV84NoHXZ0AkPyqQ==}
 
-  nanoid@3.3.16:
-    resolution: {integrity: sha512-bzlKTyNJ7+LdGIIwy8ijFpIqEQIvafahV7eYykJ8Cvh42EdJeODoJ6gUJXpQJvej1BddH8OqTXZNE/KfbWAu8Q==}
+  nanoid@3.3.18:
+    resolution: {integrity: sha512-DTg4MJbGMWkfi6VZFdNt2/caMbQy4Ou+Op/hJQvGEWcnVfoA1QA+xzRKAzw9jD6+GVOOeYr/mIcuDSdug6F6+w==}
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
 
@@ -2610,7 +2617,7 @@ snapshots:
     dependencies:
       '@types/hast': 3.0.5
       '@types/mdast': 4.0.4
-      js-yaml: 4.3.0
+      js-yaml: 4.3.1
       picomatch: 4.0.5
       retext-smartypants: 6.2.0
       shiki: 4.3.1
@@ -2621,7 +2628,7 @@ snapshots:
     dependencies:
       '@types/hast': 3.0.5
       '@types/mdast': 4.0.4
-      js-yaml: 4.3.0
+      js-yaml: 4.3.1
       picomatch: 4.0.5
       retext-smartypants: 6.2.0
       shiki: 4.3.1
@@ -2739,7 +2746,7 @@ snapshots:
       hast-util-to-string: 3.0.1
       hastscript: 9.0.1
       i18next: 26.3.6(typescript@5.9.3)
-      js-yaml: 4.3.0
+      js-yaml: 4.3.1
       klona: 2.0.6
       magic-string: 0.30.21
       mdast-util-directive: 3.1.0
@@ -3015,7 +3022,11 @@ snapshots:
 
   '@fontsource-variable/fraunces@5.2.9': {}
 
+  '@fontsource-variable/jetbrains-mono@5.3.0': {}
+
   '@fontsource-variable/schibsted-grotesk@5.2.8': {}
+
+  '@fontsource-variable/space-grotesk@5.3.0': {}
 
   '@fontsource-variable/spline-sans-mono@5.2.8': {}
 
@@ -3295,25 +3306,23 @@ snapshots:
 
   '@shikijs/vscode-textmate@10.0.2': {}
 
-  '@shuttering/error-pages@0.3.0(vitest@4.1.10(@types/node@24.13.3)(vite@8.1.4(@types/node@24.13.3)(esbuild@0.28.1)(yaml@2.9.0)))':
+  '@shuttering/error-pages@0.3.3(vitest@4.1.10(@types/node@24.13.3)(vite@8.1.4(@types/node@24.13.3)(esbuild@0.28.1)(yaml@2.9.0)))':
     dependencies:
-      '@shuttering/tokens': 0.5.0
-    optionalDependencies:
+      '@shuttering/tokens': 0.8.0
       vitest: 4.1.10(@types/node@24.13.3)(vite@8.1.4(@types/node@24.13.3)(esbuild@0.28.1)(yaml@2.9.0))
 
-  '@shuttering/starlight@https://registry.npmjs.org/@shuttering/starlight/-/starlight-0.2.0.tgz(@astrojs/starlight@0.41.3(astro@7.1.6(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.2)(@types/node@24.13.3)(yaml@2.9.0))(typescript@5.9.3))(astro@7.1.6(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.2)(@types/node@24.13.3)(yaml@2.9.0))':
+  '@shuttering/starlight@0.2.1(@astrojs/starlight@0.41.3(astro@7.1.6(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.2)(@types/node@24.13.3)(yaml@2.9.0))(typescript@5.9.3))(astro@7.1.6(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.2)(@types/node@24.13.3)(yaml@2.9.0))':
     dependencies:
       '@astrojs/starlight': 0.41.3(astro@7.1.6(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.2)(@types/node@24.13.3)(yaml@2.9.0))(typescript@5.9.3)
       astro: 7.1.6(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.2)(@types/node@24.13.3)(yaml@2.9.0)
 
-  '@shuttering/tokens@0.5.0':
+  '@shuttering/tokens@0.8.0':
     dependencies:
       '@fontsource-variable/fraunces': 5.2.9
       '@fontsource-variable/schibsted-grotesk': 5.2.8
       '@fontsource-variable/spline-sans-mono': 5.2.8
 
-  '@standard-schema/spec@1.1.0':
-    optional: true
+  '@standard-schema/spec@1.1.0': {}
 
   '@tybys/wasm-util@0.10.3':
     dependencies:
@@ -3324,14 +3333,12 @@ snapshots:
     dependencies:
       '@types/deep-eql': 4.0.2
       assertion-error: 2.0.1
-    optional: true
 
   '@types/debug@4.1.13':
     dependencies:
       '@types/ms': 2.1.0
 
-  '@types/deep-eql@4.0.2':
-    optional: true
+  '@types/deep-eql@4.0.2': {}
 
   '@types/estree-jsx@1.0.5':
     dependencies:
@@ -3379,7 +3386,6 @@ snapshots:
       '@vitest/utils': 4.1.10
       chai: 6.2.2
       tinyrainbow: 3.1.1
-    optional: true
 
   '@vitest/mocker@4.1.10(vite@8.1.4(@types/node@24.13.3)(esbuild@0.28.1)(yaml@2.9.0))':
     dependencies:
@@ -3388,18 +3394,15 @@ snapshots:
       magic-string: 0.30.21
     optionalDependencies:
       vite: 8.1.4(@types/node@24.13.3)(esbuild@0.28.1)(yaml@2.9.0)
-    optional: true
 
   '@vitest/pretty-format@4.1.10':
     dependencies:
       tinyrainbow: 3.1.1
-    optional: true
 
   '@vitest/runner@4.1.10':
     dependencies:
       '@vitest/utils': 4.1.10
       pathe: 2.0.3
-    optional: true
 
   '@vitest/snapshot@4.1.10':
     dependencies:
@@ -3407,17 +3410,14 @@ snapshots:
       '@vitest/utils': 4.1.10
       magic-string: 0.30.21
       pathe: 2.0.3
-    optional: true
 
-  '@vitest/spy@4.1.10':
-    optional: true
+  '@vitest/spy@4.1.10': {}
 
   '@vitest/utils@4.1.10':
     dependencies:
       '@vitest/pretty-format': 4.1.10
       convert-source-map: 2.0.0
       tinyrainbow: 3.1.1
-    optional: true
 
   '@volar/kit@2.4.28(typescript@5.9.3)':
     dependencies:
@@ -3513,8 +3513,7 @@ snapshots:
 
   array-iterate@2.0.1: {}
 
-  assertion-error@2.0.1:
-    optional: true
+  assertion-error@2.0.1: {}
 
   astring@1.9.0: {}
 
@@ -3552,7 +3551,7 @@ snapshots:
       github-slugger: 2.0.0
       html-escaper: 3.0.3
       http-cache-semantics: 4.2.0
-      js-yaml: 4.3.0
+      js-yaml: 4.3.1
       jsonc-parser: 3.3.1
       magic-string: 1.1.0
       magicast: 0.5.3
@@ -3632,8 +3631,7 @@ snapshots:
 
   ccount@2.0.1: {}
 
-  chai@6.2.2:
-    optional: true
+  chai@6.2.2: {}
 
   character-entities-html4@2.1.0: {}
 
@@ -3675,8 +3673,7 @@ snapshots:
 
   common-ancestor-path@2.0.0: {}
 
-  convert-source-map@2.0.0:
-    optional: true
+  convert-source-map@2.0.0: {}
 
   cookie-es@1.2.3: {}
 
@@ -3857,8 +3854,7 @@ snapshots:
 
   eventemitter3@5.0.4: {}
 
-  expect-type@1.4.0:
-    optional: true
+  expect-type@1.4.0: {}
 
   expressive-code@0.44.0:
     dependencies:
@@ -4142,7 +4138,7 @@ snapshots:
 
   is-plain-obj@4.1.0: {}
 
-  js-yaml@4.3.0:
+  js-yaml@4.3.1:
     dependencies:
       argparse: 2.0.1
 
@@ -4694,7 +4690,7 @@ snapshots:
 
   muggle-string@0.4.1: {}
 
-  nanoid@3.3.16: {}
+  nanoid@3.3.18: {}
 
   neotraverse@1.0.1: {}
 
@@ -4714,8 +4710,7 @@ snapshots:
 
   obug@2.1.3: {}
 
-  obug@2.1.4:
-    optional: true
+  obug@2.1.4: {}
 
   ofetch@1.5.1:
     dependencies:
@@ -4781,8 +4776,7 @@ snapshots:
 
   path-browserify@1.0.1: {}
 
-  pathe@2.0.3:
-    optional: true
+  pathe@2.0.3: {}
 
   piccolore@0.1.3: {}
 
@@ -4804,7 +4798,7 @@ snapshots:
 
   postcss@8.5.25:
     dependencies:
-      nanoid: 3.3.16
+      nanoid: 3.3.18
       picocolors: 1.1.1
       source-map-js: 1.2.1
 
@@ -5081,8 +5075,7 @@ snapshots:
       '@shikijs/vscode-textmate': 10.0.2
       '@types/hast': 3.0.5
 
-  siginfo@2.0.0:
-    optional: true
+  siginfo@2.0.0: {}
 
   sisteransi@1.0.5: {}
 
@@ -5101,11 +5094,9 @@ snapshots:
 
   space-separated-tokens@2.0.2: {}
 
-  stackback@0.0.2:
-    optional: true
+  stackback@0.0.2: {}
 
-  std-env@4.2.0:
-    optional: true
+  std-env@4.2.0: {}
 
   stream-replace-string@2.0.0: {}
 
@@ -5144,23 +5135,20 @@ snapshots:
 
   tiny-inflate@1.0.3: {}
 
-  tinybench@2.9.0:
-    optional: true
+  tinybench@2.9.0: {}
 
   tinyclip@0.1.15: {}
 
   tinyexec@1.2.4: {}
 
-  tinyexec@1.3.0:
-    optional: true
+  tinyexec@1.3.0: {}
 
   tinyglobby@0.2.17:
     dependencies:
       fdir: 6.5.0(picomatch@4.0.5)
       picomatch: 4.0.5
 
-  tinyrainbow@3.1.1:
-    optional: true
+  tinyrainbow@3.1.1: {}
 
   trim-lines@3.0.1: {}
 
@@ -5320,7 +5308,6 @@ snapshots:
       '@types/node': 24.13.3
     transitivePeerDependencies:
       - msw
-    optional: true
 
   volar-service-css@0.0.71(@volar/language-service@2.4.28):
     dependencies:
@@ -5434,7 +5421,6 @@ snapshots:
     dependencies:
       siginfo: 2.0.0
       stackback: 0.0.2
-    optional: true
 
   wrap-ansi@7.0.0:
     dependencies:

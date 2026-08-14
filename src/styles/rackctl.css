@@ -2,11 +2,24 @@
    The slate ground and the low-border chrome come from the shared theme; this
    file supplies only what's rackctl's own: the operator-console typefaces and the
    exact steel accent (also exposed as --rk-steel* for the custom Hero). */
-@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap");
+/* Self-hosted, matching web/src/index.css. The remote Google Fonts @import that
+   used to be here was blocked in production: the docs CSP grants neither
+   fonts.googleapis.com under style-src nor fonts.gstatic.com under font-src, so
+   the stylesheet never loaded and every page fell back to the system stack.
+   Self-hosting fixes it without widening the CSP, drops a render-blocking
+   cross-origin request, and matches how web already does this. */
+@import "@fontsource-variable/space-grotesk";
+@import "@fontsource-variable/jetbrains-mono";
 
 :root {
-  --font-sans-face: "Space Grotesk", ui-sans-serif, system-ui, -apple-system, sans-serif;
-  --font-mono-face: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  /* The fontsource packages register the "* Variable" families, so the stack has to
+     name those or the self-hosted faces are downloaded and never used. The
+     non-variable names are kept as the next fallback for anyone who has them
+     installed locally. */
+  --font-sans-face:
+    "Space Grotesk Variable", "Space Grotesk", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono-face:
+    "JetBrains Mono Variable", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 
   /* rackctl steel — the site's accent. Overrides the shared palette seam with
      rackctl's exact values, and exposes the brand shades the Hero references. */

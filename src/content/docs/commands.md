@@ -128,7 +128,15 @@ Two gaps it does **not** cover, both disclosed at runtime rather than papered ov
 
 :::danger
 `rackctl destroy` removes cloud resources and is not reversible. Confirm the
-account, region, and profile in the printed title before you run it.
+account, profile, region and environment in the printed title before you run it:
+
+```
+rackctl destroy — acme · 351619759866 · stxkxs · us-west-2 · development
+                  org    account        profile   region      environment
+```
+
+The account and the profile are the two that decide *which cloud* is about to
+change — a region is shared by every account you have.
 
 If this cluster is an **eks-fleet hub** with spoke clusters still vended, `destroy`
 refuses. Each spoke is a real EKS cluster — its own control plane, VPC and NAT

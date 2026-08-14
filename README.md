@@ -7,10 +7,19 @@ and [Starlight](https://starlight.astro.build), deployed to
 
 ## Develop
 
+`@shuttering/*` is published to GitHub Packages. Configure auth once (any token
+with `read:packages` on the shuttering org), then install:
+
 ```sh
+pnpm config set '//npm.pkg.github.com/:_authToken' "$(gh auth token)"
 pnpm install
 pnpm dev        # http://localhost:4321
 ```
+
+`pnpm config set` writes to your user-level config on purpose. Putting the token
+in this repo's `.npmrc` does not work: from pnpm 10.34.2 environment variables
+are no longer expanded in registry credentials read from a project `.npmrc`,
+since that file is committed and could leak the secret to another registry.
 
 ## Build
 
