@@ -8,13 +8,6 @@ on:
 permissions:
   contents: read
 
-env:
-  # Read @shuttering/error-pages (and its @shuttering/tokens dep) from GitHub
-  # Packages (see .npmrc). A PAT with read:packages on the shuttering org,
-  # stored as an org Actions secret. @shuttering/starlight still comes from
-  # npmjs (pinned in pnpm.overrides), so npmjs stays the default registry.
-  NODE_AUTH_TOKEN: ${{ secrets.SHUTTERING_NPM_TOKEN }}
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -27,6 +20,27 @@ jobs:
         with:
           node-version: 24
           cache: pnpm
+
+      # Every @shuttering/* package — starlight, error-pages and its tokens dep —
+      # comes from GitHub Packages (see .npmrc), so this token gates the whole
+      # install, not a peripheral part of it. A PAT with read:packages on the
+      # shuttering org, stored as an org Actions secret.
+      #
+      # Set here rather than as a NODE_AUTH_TOKEN env var expanded by .npmrc,
+      # because pnpm stopped expanding environment variables in registry
+      # credentials that come from a PROJECT .npmrc in 10.34.2 — that file is
+      # committed, so a malicious edit could forward the secret to an
+      # attacker-controlled registry. It now warns and IGNORES the line. The
+      # repo pins pnpm@10.32.1, so the old form still works today and would
+      # have gone on working until some routine bump crossed 10.34.2 and the
+      # install started resolving @shuttering/* unauthenticated against npmjs,
+      # where they do not exist. `pnpm config set` writes to a trusted
+      # user-level config that pnpm still honours, and is what pnpm's own
+      # warning recommends. Matches rackctl/web.
+      - name: Configure @shuttering registry auth
+        run: pnpm config set '//npm.pkg.github.com/:_authToken' "$SHUTTERING_NPM_TOKEN"
+        env:
+          SHUTTERING_NPM_TOKEN: ${{ secrets.SHUTTERING_NPM_TOKEN }}
 
       - name: Install
         run: pnpm install --frozen-lockfile

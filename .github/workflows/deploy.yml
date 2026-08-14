@@ -12,13 +12,6 @@ concurrency:
   group: deploy-docs
   cancel-in-progress: true
 
-env:
-  # Read @shuttering/error-pages (and its @shuttering/tokens dep) from GitHub
-  # Packages (see .npmrc). A PAT with read:packages on the shuttering org,
-  # stored as an org Actions secret. @shuttering/starlight still comes from
-  # npmjs (pinned in pnpm.overrides), so npmjs stays the default registry.
-  NODE_AUTH_TOKEN: ${{ secrets.SHUTTERING_NPM_TOKEN }}
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -33,6 +26,15 @@ jobs:
         with:
           node-version: lts/*
           cache: pnpm
+
+      # See ci.yml for why this is `pnpm config set` and not a NODE_AUTH_TOKEN
+      # env var: pnpm ignores env expansion in a committed project .npmrc from
+      # 10.34.2 onward, so the env-var form is a silent failure waiting on a
+      # routine pnpm bump.
+      - name: Configure @shuttering registry auth
+        run: pnpm config set '//npm.pkg.github.com/:_authToken' "$SHUTTERING_NPM_TOKEN"
+        env:
+          SHUTTERING_NPM_TOKEN: ${{ secrets.SHUTTERING_NPM_TOKEN }}
 
       - name: Install
         run: pnpm install --frozen-lockfile
