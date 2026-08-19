@@ -1,0 +1,70 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": [
+    "Renovate posture for rackctl/docs.",
+    "WHY NOT A SHARED PRESET: rackctl/.github publishes none, so there is nothing to extend. This is a small, single-purpose static site — Astro + Starlight, a private theme package, two fontsource families and a lint/typecheck toolchain. Inheriting a platform preset would arrive with rules for gomod, helm and k8s.io that match nothing here.",
+    "TITLE CONTRACT: 'deps' is the semantic SCOPE, never the semantic TYPE. The repo's history is conventional (ci(deploy):, fix(docs):, docs(configuration):); a 'deps:' type sits outside the conventional set and would be unmergeable behind any title gate, silently, because a repo without such a gate merges it happily."
+  ],
+  "extends": [
+    "config:recommended",
+    ":semanticCommits",
+    ":semanticCommitTypeAll(chore)",
+    ":dependencyDashboard"
+  ],
+  "timezone": "America/Los_Angeles",
+  "schedule": ["before 9am on monday"],
+  "prConcurrentLimit": 3,
+  "labels": ["dependencies"],
+  "lockFileMaintenance": { "enabled": true },
+  "packageRules": [
+    {
+      "description": [
+        "Astro and Starlight move as ONE PR. @astrojs/starlight declares a peer range on astro (currently ^7.0.0), so bumping astro across a major without starlight — or the reverse — produces a lockfile that cannot resolve. Separate PRs would each be green in isolation and break on merge order."
+      ],
+      "groupName": "astro + starlight",
+      "matchPackageNames": ["astro", "@astrojs/**"]
+    },
+    {
+      "description": [
+        "The @shuttering/* packages resolve from npm.pkg.github.com (see .npmrc), which Renovate cannot read without host credentials configured at the org or app level. Left enabled it would open PRs it cannot verify or fail the run outright. Re-enable this rule once a hostRules token exists — the theme is a real dependency and should not drift forever."
+      ],
+      "matchPackageNames": ["@shuttering/**"],
+      "enabled": false
+    },
+    {
+      "description": [
+        "Typefaces are content, not behaviour: a fontsource bump changes glyph files, never an API. Group and automerge on minor/patch to keep them out of the review queue."
+      ],
+      "groupName": "fontsource",
+      "matchPackageNames": ["@fontsource-variable/**"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": true
+    },
+    {
+      "description": [
+        "Biome is pinned to an exact version on purpose — the lockfile, not a range, is what makes CI's lint gate reproducible. Renovate should still move that pin, just visibly and on its own."
+      ],
+      "matchPackageNames": ["@biomejs/biome"],
+      "rangeStrategy": "pin"
+    },
+    {
+      "description": [
+        "Pinned action SHAs and versions are a supply-chain control, including the osv-scanner gate itself. Keep them current — a stale scanner is a scanner that has stopped finding things."
+      ],
+      "groupName": "github actions",
+      "matchManagers": ["github-actions"]
+    },
+    {
+      "description": [
+        "fast-uri and postcss are held in pnpm.overrides to clear advisories osv-scanner gates on. Renovate may raise them; it must never drop below the pinned floor, which the override itself enforces."
+      ],
+      "matchPackageNames": ["fast-uri", "postcss"],
+      "matchManagers": ["npm"]
+    }
+  ],
+  "vulnerabilityAlerts": {
+    "description": "Security fixes bypass the weekly schedule — osv-scanner already fails CI on a known advisory, so a held security bump blocks every unrelated PR too.",
+    "schedule": ["at any time"],
+    "labels": ["dependencies", "security"]
+  }
+}

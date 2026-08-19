@@ -2,6 +2,7 @@
 
 import starlight from "@astrojs/starlight";
 import { defineConfig } from "astro/config";
+import { sidebar } from "./src/sidebar";
 
 // https://astro.build/config
 export default defineConfig({
@@ -27,36 +28,23 @@ export default defineConfig({
         Hero: "./src/components/Hero.astro",
         // Icon theme toggle + view transitions (with the TOC scroll-spy fix).
         ThemeSelect: "@shuttering/starlight/ThemeSelect.astro",
-        Head: "@shuttering/starlight/Head.astro",
+        // Wraps the shared theme's Head and completes the social card — Starlight
+        // declares summary_large_image but never emits an image.
+        Head: "./src/components/Head.astro",
       },
+      // Site-wide default. Starlight merges head sources in order — its own
+      // defaults, then this, then per-page frontmatter — so the 404's
+      // `noindex, follow` still overrides this rather than fighting it.
+      head: [
+        {
+          tag: "meta",
+          attrs: { name: "robots", content: "index, follow" },
+        },
+      ],
       social: [{ icon: "github", label: "GitHub", href: "https://github.com/rackctl/rackctl" }],
       editLink: { baseUrl: "https://github.com/rackctl/docs/edit/main/" },
       lastUpdated: true,
-      sidebar: [
-        {
-          label: "Start here",
-          items: [
-            { label: "Overview", link: "/" },
-            { label: "Install", link: "/install/" },
-            { label: "Quickstart", link: "/quickstart/" },
-          ],
-        },
-        {
-          label: "Reference",
-          items: [
-            { label: "Configuration", link: "/configuration/" },
-            { label: "Commands", link: "/commands/" },
-            { label: "The pipeline", link: "/pipeline/" },
-          ],
-        },
-        {
-          label: "Operate",
-          items: [
-            { label: "Footguns", link: "/footguns/" },
-            { label: "Runbook", link: "/runbook/" },
-          ],
-        },
-      ],
+      sidebar,
     }),
   ],
 });
