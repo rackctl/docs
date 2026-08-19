@@ -82,7 +82,7 @@ for (const file of htmlFiles) {
 
     const [pathPart, fragment] = href.split("#");
 
-    const target = pathPart === "" ? from : posix.resolve(posix.dirname(from + "index"), pathPart);
+    const target = pathPart === "" ? from : posix.resolve(posix.dirname(`${from}index`), pathPart);
     const normalised = target.endsWith("/") || posix.extname(target) ? target : `${target}/`;
 
     if (pathPart !== "") {
