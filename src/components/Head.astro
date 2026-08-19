@@ -1,0 +1,98 @@
+---
+// Completes the site's social card and points agents at /llms.txt.
+//
+// Starlight emits `twitter:card=summary_large_image` unconditionally but never an
+// image (see @astrojs/starlight/utils/head.ts) — a large-image card with no image
+// renders as a bare text card on every platform that reads it, which is worse
+// than declaring no card at all. These tags supply the image and the explicit
+// twitter:* pair the SEO baseline asks for.
+//
+// Wraps the shared theme's Head rather than replacing it, so the view transitions
+// and the TOC scroll-spy fix in @shuttering/starlight are preserved.
+import ShutteringHead from "@shuttering/starlight/Head.astro";
+
+const { head } = Astro.locals.starlightRoute;
+
+// Starlight has already resolved this page's og:title / og:description — including
+// the fallback to the site description on pages without frontmatter (the 404).
+// Read them back out of the resolved head instead of recomputing from frontmatter,
+// so the twitter:* tags can never disagree with the og:* tags beside them.
+const metaContent = (key: string, attr: "property" | "name" = "property"): string | undefined => {
+  const content = head.find((tag) => tag.tag === "meta" && tag.attrs?.[attr] === key)?.attrs
+    ?.content;
+  return typeof content === "string" ? content : undefined;
+};
+
+const title = metaContent("og:title");
+const description = metaContent("og:description");
+
+// Scrapers do not resolve relative paths, so both must be absolute.
+const site = Astro.site;
+if (!site) {
+  throw new Error(
+    "`site` must be set in astro.config.mjs — og:image and llms.txt need absolute URLs.",
+  );
+}
+const image = new URL("/og.png", site).href;
+const llms = new URL("/llms.txt", site).href;
+
+// Structured data. rackctl is a CLI, so the site as a whole describes a
+// SoftwareApplication; each reference page is a TechArticle about it. Emitted as
+// one @graph so the two nodes can reference each other rather than floating free.
+const isHome = new URL(Astro.url.pathname, site).pathname === "/";
+
+const graph: Record<string, unknown>[] = [
+  {
+    "@type": "SoftwareApplication",
+    "@id": new URL("/#software", site).href,
+    name: "rackctl",
+    applicationCategory: "DeveloperApplication",
+    operatingSystem: "macOS, Linux",
+    description:
+      "The day-0 installer for a nanohype platform — one command takes an empty AWS account to a running, self-reconciling platform.",
+    url: "https://rackctl.sh",
+    downloadUrl: "https://github.com/rackctl/rackctl",
+    license: "https://www.apache.org/licenses/LICENSE-2.0",
+    offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+  },
+  {
+    "@type": "WebSite",
+    "@id": new URL("/#website", site).href,
+    name: "rackctl documentation",
+    url: site.href,
+    about: { "@id": new URL("/#software", site).href },
+  },
+];
+
+if (!isHome && title) {
+  graph.push({
+    "@type": "TechArticle",
+    headline: title,
+    ...(description ? { description } : {}),
+    url: new URL(Astro.url.pathname, site).href,
+    about: { "@id": new URL("/#software", site).href },
+    isPartOf: { "@id": new URL("/#website", site).href },
+  });
+}
+
+const jsonLd = JSON.stringify({ "@context": "https://schema.org", "@graph": graph });
+---
+
+<ShutteringHead />
+
+<meta property="og:image" content={image} />
+<meta property="og:image:type" content="image/png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta
+  property="og:image:alt"
+  content="rackctl — the day-0 installer for a nanohype platform"
+/>
+
+<meta name="twitter:image" content={image} />
+{title && <meta name="twitter:title" content={title} />}
+{description && <meta name="twitter:description" content={description} />}
+
+<link rel="alternate" type="text/markdown" href={llms} title="llms.txt" />
+
+<script type="application/ld+json" set:html={jsonLd} is:inline />

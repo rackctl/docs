@@ -15,9 +15,25 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    # Dormant until infra is applied and the deploy role ARN is set as a variable.
-    if: ${{ vars.AWS_DEPLOY_ROLE_ARN != '' }}
     steps:
+      # A missing variable used to make this job `if:`-skip, which GitHub reports as
+      # a GREEN run — main would merge and publish nothing, with no signal anywhere.
+      # Deploy config is required, so assert it and fail loudly instead.
+      - name: Require deploy configuration
+        env:
+          ROLE_ARN: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
+          BUCKET: ${{ vars.DOCS_BUCKET }}
+          DISTRIBUTION_ID: ${{ vars.DOCS_DISTRIBUTION_ID }}
+        run: |
+          missing=()
+          [ -n "$ROLE_ARN" ]        || missing+=(AWS_DEPLOY_ROLE_ARN)
+          [ -n "$BUCKET" ]          || missing+=(DOCS_BUCKET)
+          [ -n "$DISTRIBUTION_ID" ] || missing+=(DOCS_DISTRIBUTION_ID)
+          if [ ${#missing[@]} -gt 0 ]; then
+            echo "::error::Missing repository/org variable(s): ${missing[*]}"
+            exit 1
+          fi
+
       - uses: actions/checkout@v4
 
       - uses: pnpm/action-setup@v4
@@ -47,10 +63,31 @@ jobs:
           role-to-assume: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
           aws-region: us-east-1
 
+      # Both the bucket and the distribution come from variables. They used to be
+      # bound two different ways on adjacent lines — one hardcoded, one injected —
+      # which meant moving accounts required editing the workflow for one of them
+      # and only the settings page for the other.
       - name: Sync and invalidate
         env:
-          BUCKET: rackctl-docs-site-477165397189
+          BUCKET: ${{ vars.DOCS_BUCKET }}
           DISTRIBUTION_ID: ${{ vars.DOCS_DISTRIBUTION_ID }}
         run: |
           aws s3 sync dist/ "s3://$BUCKET/" --delete
           aws cloudfront create-invalidation --distribution-id "$DISTRIBUTION_ID" --paths '/*'
+
+      # The steps above can all succeed while the site serves nothing useful — a
+      # wrong bucket syncs happily into an origin no distribution reads. Assert the
+      # real origin actually serves the real page. Retries cover invalidation lag.
+      - name: Smoke check
+        env:
+          SITE: https://docs.rackctl.sh
+        run: |
+          for path in / /install/ /robots.txt /llms.txt /sitemap.xml /og.png; do
+            code=$(curl -sS -o /dev/null -w '%{http_code}' --retry 5 --retry-delay 4 \
+                        --retry-all-errors --max-time 30 "$SITE$path")
+            if [ "$code" != "200" ]; then
+              echo "::error::$SITE$path returned $code, expected 200"
+              exit 1
+            fi
+            echo "  ok  $path"
+          done

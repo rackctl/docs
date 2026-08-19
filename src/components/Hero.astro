@@ -3,12 +3,14 @@
 // console-styled; echoes rackctl.sh: the rack mark with its green LED, a
 // terminal install line, steel key + ghost actions. Reads the page's own
 // title/tagline so it stays the semantic H1 (owns the #_top skip anchor).
+import { INSTALL_COMMAND } from "../site";
+
 const data = Astro.locals.starlightRoute?.entry?.data ?? {};
 const title = data.title ?? "rackctl";
 const tagline =
   data.hero?.tagline ??
   "One command takes an empty AWS account to a running, self-reconciling nanohype platform — then hands off to the portal for day-2.";
-const install = "curl -fsSL rackctl.sh/install | sh";
+const install = INSTALL_COMMAND;
 ---
 
 <section class="rk-hero" aria-labelledby="_top">
