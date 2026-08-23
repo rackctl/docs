@@ -11,6 +11,14 @@
     ":semanticCommitTypeAll(chore)",
     ":dependencyDashboard"
   ],
+  "hostRules": [
+    {
+      "description": "Credentials for the @shuttering scope, which .npmrc maps to GitHub Packages. matchHost must be the full URL with its trailing slash so it agrees with the registryUrl .npmrc supplies; a bare hostname does not match and the lookup falls back to npmjs, where this scope publishes behind.",
+      "matchHost": "https://npm.pkg.github.com/",
+      "hostType": "npm",
+      "token": "{{ secrets.SHUTTERING_NPM_TOKEN }}"
+    }
+  ],
   "timezone": "America/Los_Angeles",
   "schedule": ["before 9am on monday"],
   "prConcurrentLimit": 3,
@@ -26,10 +34,11 @@
     },
     {
       "description": [
-        "The @shuttering/* packages resolve from npm.pkg.github.com (see .npmrc), which Renovate cannot read without host credentials configured at the org or app level. Left enabled it would open PRs it cannot verify or fail the run outright. Re-enable this rule once a hostRules token exists — the theme is a real dependency and should not drift forever."
+        "The @shuttering/* packages resolve from npm.pkg.github.com (see .npmrc), read with the hostRules token above. Pinned exact, like biome and for a stronger reason: this is a private design system, a bump can change how every page renders, and a caret is what let a broken theme version sit installed while a fix was already published. An exact pin forces a visible PR.",
+        "npmjs carries this scope too, but behind. A version this repo cannot see is a credential problem, never a reason to repoint the registry."
       ],
       "matchPackageNames": ["@shuttering/**"],
-      "enabled": false
+      "rangeStrategy": "pin"
     },
     {
       "description": [
