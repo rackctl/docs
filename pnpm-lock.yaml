@@ -22,8 +22,8 @@ importers:
         specifier: ^5.3.0
         version: 5.3.0
       '@shuttering/starlight':
-        specifier: ^0.2.1
-        version: 0.2.1(@astrojs/starlight@0.41.3(astro@7.1.6(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.2)(@types/node@24.13.3)(yaml@2.9.0))(typescript@5.9.3))(astro@7.1.6(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.2)(@types/node@24.13.3)(yaml@2.9.0))
+        specifier: 0.2.3
+        version: 0.2.3(@astrojs/starlight@0.41.3(astro@7.1.6(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.2)(@types/node@24.13.3)(yaml@2.9.0))(typescript@5.9.3))(astro@7.1.6(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.2)(@types/node@24.13.3)(yaml@2.9.0))
       astro:
         specifier: ^7.1.6
         version: 7.1.6(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.2)(@types/node@24.13.3)(yaml@2.9.0)
@@ -38,8 +38,8 @@ importers:
         specifier: 2.5.3
         version: 2.5.3
       '@shuttering/error-pages':
-        specifier: 0.3.3
-        version: 0.3.3(vitest@4.1.10(@types/node@24.13.3)(vite@8.1.4(@types/node@24.13.3)(esbuild@0.28.1)(yaml@2.9.0)))
+        specifier: 0.4.0
+        version: 0.4.0(vitest@4.1.10(@types/node@24.13.3)(vite@8.1.4(@types/node@24.13.3)(esbuild@0.28.1)(yaml@2.9.0)))
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
@@ -898,20 +898,28 @@ packages:
   '@shikijs/vscode-textmate@10.0.2':
     resolution: {integrity: sha512-83yeghZ2xxin3Nj8z1NMd/NCuca+gsYXswywDy5bHvwlWL8tpTQmzGeUuHd9FC3E/SBEMvzJRwWEOz5gGes9Qg==}
 
-  '@shuttering/error-pages@0.3.3':
-    resolution: {integrity: sha512-tryCW/LZF6loH+8kZYwcE81Sr7wUwLR5lQVd6DRj+PkippRj+K0DyZprfPCZLVsqKttBBJIJtgau1FMdsghtbg==, tarball: https://npm.pkg.github.com/download/@shuttering/error-pages/0.3.3/ba58fbe55a7fef7b18e954f6d66e3ea6336a8476}
+  '@shuttering/error-pages@0.4.0':
+    resolution: {integrity: sha512-ZgfY2CxL3KURx3F2sLQJ7TgqO9MUfYD/TnA4hdjxKbAmluOE9KGFwFjPkPq3unupBmqJ9fNNJbf6POz7qJ1lsg==, tarball: https://npm.pkg.github.com/download/@shuttering/error-pages/0.4.0/db2edb654559630564c4d2e5a722d0e58a442898}
     hasBin: true
     peerDependencies:
       vitest: '>=4'
+    peerDependenciesMeta:
+      vitest:
+        optional: true
 
-  '@shuttering/starlight@0.2.1':
-    resolution: {integrity: sha512-tQlpU6w03JWWI7gPClfd6mFJNSUn3QT95qRbmhL6losk1/SbJdd1rYFI8E3FJ5c+TO2gPdrOPCnaJ9ZEfwfi4Q==, tarball: https://npm.pkg.github.com/download/@shuttering/starlight/0.2.1/c26e297cf54b542e5363215a679347267ea23fe2}
+  '@shuttering/starlight@0.2.3':
+    resolution: {integrity: sha512-LutRuY9VbPh7kq9SFFEg4uYirkkJH3gtG5o3tA+Wsw3bWULoc5KM+zfb/4kP57JoNIFWYnE+9KTknP4NrABeJw==, tarball: https://npm.pkg.github.com/download/@shuttering/starlight/0.2.3/e96bc2f81cb4947f013fa100ad9d62b33dedb398}
     peerDependencies:
       '@astrojs/starlight': '>=0.41.0'
       astro: '>=5.0.0'
 
-  '@shuttering/tokens@0.8.0':
-    resolution: {integrity: sha512-qYoJKwd1DRKRzWzZ0NGSemJTVW5Wk6VwN2vxOmM0lGYHT9MQ3fVOVE6NWJUkZSTF5S5YAUkbqL4gL/Rq+F+ABA==, tarball: https://npm.pkg.github.com/download/@shuttering/tokens/0.8.0/3feac1e3752937ddf2800a3dbf993a4fc3055a35}
+  '@shuttering/tokens@1.0.0':
+    resolution: {integrity: sha512-FrBhIpI75xYHz6UK949XKNyzhBv89o1RO32MYlHmEIqJ61uf3Mb+WcVO969UNN0VHSW1w0UD+rBHged1utst7A==, tarball: https://npm.pkg.github.com/download/@shuttering/tokens/1.0.0/9ecf0543921733a2a6d14eca6f657aab3730a9bb}
+    peerDependencies:
+      vitest: '>=4'
+    peerDependenciesMeta:
+      vitest:
+        optional: true
 
   '@standard-schema/spec@1.1.0':
     resolution: {integrity: sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w==}
@@ -3306,23 +3314,27 @@ snapshots:
 
   '@shikijs/vscode-textmate@10.0.2': {}
 
-  '@shuttering/error-pages@0.3.3(vitest@4.1.10(@types/node@24.13.3)(vite@8.1.4(@types/node@24.13.3)(esbuild@0.28.1)(yaml@2.9.0)))':
+  '@shuttering/error-pages@0.4.0(vitest@4.1.10(@types/node@24.13.3)(vite@8.1.4(@types/node@24.13.3)(esbuild@0.28.1)(yaml@2.9.0)))':
     dependencies:
-      '@shuttering/tokens': 0.8.0
+      '@shuttering/tokens': 1.0.0(vitest@4.1.10(@types/node@24.13.3)(vite@8.1.4(@types/node@24.13.3)(esbuild@0.28.1)(yaml@2.9.0)))
+    optionalDependencies:
       vitest: 4.1.10(@types/node@24.13.3)(vite@8.1.4(@types/node@24.13.3)(esbuild@0.28.1)(yaml@2.9.0))
 
-  '@shuttering/starlight@0.2.1(@astrojs/starlight@0.41.3(astro@7.1.6(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.2)(@types/node@24.13.3)(yaml@2.9.0))(typescript@5.9.3))(astro@7.1.6(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.2)(@types/node@24.13.3)(yaml@2.9.0))':
+  '@shuttering/starlight@0.2.3(@astrojs/starlight@0.41.3(astro@7.1.6(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.2)(@types/node@24.13.3)(yaml@2.9.0))(typescript@5.9.3))(astro@7.1.6(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.2)(@types/node@24.13.3)(yaml@2.9.0))':
     dependencies:
       '@astrojs/starlight': 0.41.3(astro@7.1.6(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.2)(@types/node@24.13.3)(yaml@2.9.0))(typescript@5.9.3)
       astro: 7.1.6(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.2)(@types/node@24.13.3)(yaml@2.9.0)
 
-  '@shuttering/tokens@0.8.0':
+  '@shuttering/tokens@1.0.0(vitest@4.1.10(@types/node@24.13.3)(vite@8.1.4(@types/node@24.13.3)(esbuild@0.28.1)(yaml@2.9.0)))':
     dependencies:
       '@fontsource-variable/fraunces': 5.2.9
       '@fontsource-variable/schibsted-grotesk': 5.2.8
       '@fontsource-variable/spline-sans-mono': 5.2.8
+    optionalDependencies:
+      vitest: 4.1.10(@types/node@24.13.3)(vite@8.1.4(@types/node@24.13.3)(esbuild@0.28.1)(yaml@2.9.0))
 
-  '@standard-schema/spec@1.1.0': {}
+  '@standard-schema/spec@1.1.0':
+    optional: true
 
   '@tybys/wasm-util@0.10.3':
     dependencies:
@@ -3333,12 +3345,14 @@ snapshots:
     dependencies:
       '@types/deep-eql': 4.0.2
       assertion-error: 2.0.1
+    optional: true
 
   '@types/debug@4.1.13':
     dependencies:
       '@types/ms': 2.1.0
 
-  '@types/deep-eql@4.0.2': {}
+  '@types/deep-eql@4.0.2':
+    optional: true
 
   '@types/estree-jsx@1.0.5':
     dependencies:
@@ -3386,6 +3400,7 @@ snapshots:
       '@vitest/utils': 4.1.10
       chai: 6.2.2
       tinyrainbow: 3.1.1
+    optional: true
 
   '@vitest/mocker@4.1.10(vite@8.1.4(@types/node@24.13.3)(esbuild@0.28.1)(yaml@2.9.0))':
     dependencies:
@@ -3394,15 +3409,18 @@ snapshots:
       magic-string: 0.30.21
     optionalDependencies:
       vite: 8.1.4(@types/node@24.13.3)(esbuild@0.28.1)(yaml@2.9.0)
+    optional: true
 
   '@vitest/pretty-format@4.1.10':
     dependencies:
       tinyrainbow: 3.1.1
+    optional: true
 
   '@vitest/runner@4.1.10':
     dependencies:
       '@vitest/utils': 4.1.10
       pathe: 2.0.3
+    optional: true
 
   '@vitest/snapshot@4.1.10':
     dependencies:
@@ -3410,14 +3428,17 @@ snapshots:
       '@vitest/utils': 4.1.10
       magic-string: 0.30.21
       pathe: 2.0.3
+    optional: true
 
-  '@vitest/spy@4.1.10': {}
+  '@vitest/spy@4.1.10':
+    optional: true
 
   '@vitest/utils@4.1.10':
     dependencies:
       '@vitest/pretty-format': 4.1.10
       convert-source-map: 2.0.0
       tinyrainbow: 3.1.1
+    optional: true
 
   '@volar/kit@2.4.28(typescript@5.9.3)':
     dependencies:
@@ -3513,7 +3534,8 @@ snapshots:
 
   array-iterate@2.0.1: {}
 
-  assertion-error@2.0.1: {}
+  assertion-error@2.0.1:
+    optional: true
 
   astring@1.9.0: {}
 
@@ -3631,7 +3653,8 @@ snapshots:
 
   ccount@2.0.1: {}
 
-  chai@6.2.2: {}
+  chai@6.2.2:
+    optional: true
 
   character-entities-html4@2.1.0: {}
 
@@ -3673,7 +3696,8 @@ snapshots:
 
   common-ancestor-path@2.0.0: {}
 
-  convert-source-map@2.0.0: {}
+  convert-source-map@2.0.0:
+    optional: true
 
   cookie-es@1.2.3: {}
 
@@ -3854,7 +3878,8 @@ snapshots:
 
   eventemitter3@5.0.4: {}
 
-  expect-type@1.4.0: {}
+  expect-type@1.4.0:
+    optional: true
 
   expressive-code@0.44.0:
     dependencies:
@@ -4710,7 +4735,8 @@ snapshots:
 
   obug@2.1.3: {}
 
-  obug@2.1.4: {}
+  obug@2.1.4:
+    optional: true
 
   ofetch@1.5.1:
     dependencies:
@@ -4776,7 +4802,8 @@ snapshots:
 
   path-browserify@1.0.1: {}
 
-  pathe@2.0.3: {}
+  pathe@2.0.3:
+    optional: true
 
   piccolore@0.1.3: {}
 
@@ -5075,7 +5102,8 @@ snapshots:
       '@shikijs/vscode-textmate': 10.0.2
       '@types/hast': 3.0.5
 
-  siginfo@2.0.0: {}
+  siginfo@2.0.0:
+    optional: true
 
   sisteransi@1.0.5: {}
 
@@ -5094,9 +5122,11 @@ snapshots:
 
   space-separated-tokens@2.0.2: {}
 
-  stackback@0.0.2: {}
+  stackback@0.0.2:
+    optional: true
 
-  std-env@4.2.0: {}
+  std-env@4.2.0:
+    optional: true
 
   stream-replace-string@2.0.0: {}
 
@@ -5135,20 +5165,23 @@ snapshots:
 
   tiny-inflate@1.0.3: {}
 
-  tinybench@2.9.0: {}
+  tinybench@2.9.0:
+    optional: true
 
   tinyclip@0.1.15: {}
 
   tinyexec@1.2.4: {}
 
-  tinyexec@1.3.0: {}
+  tinyexec@1.3.0:
+    optional: true
 
   tinyglobby@0.2.17:
     dependencies:
       fdir: 6.5.0(picomatch@4.0.5)
       picomatch: 4.0.5
 
-  tinyrainbow@3.1.1: {}
+  tinyrainbow@3.1.1:
+    optional: true
 
   trim-lines@3.0.1: {}
 
@@ -5308,6 +5341,7 @@ snapshots:
       '@types/node': 24.13.3
     transitivePeerDependencies:
       - msw
+    optional: true
 
   volar-service-css@0.0.71(@volar/language-service@2.4.28):
     dependencies:
@@ -5421,6 +5455,7 @@ snapshots:
     dependencies:
       siginfo: 2.0.0
       stackback: 0.0.2
+    optional: true
 
   wrap-ansi@7.0.0:
     dependencies:
