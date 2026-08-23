@@ -75,3 +75,19 @@ jobs:
 
       - name: Build
         run: pnpm build
+
+      # Page transitions. Loads every routed page from dist/ in headless Chrome and
+      # asserts each view-transition-name resolves to exactly one element — a second
+      # claimant aborts the whole transition, and no other gate here notices.
+      #
+      # A separate step rather than part of `postbuild`, because it drives Chrome and
+      # this repo deliberately keeps Chrome out of the build: og-image.mjs states that
+      # rule and commits its artifact to honour it. Do not fold this into postbuild —
+      # a local `pnpm build` would then launch a browser.
+      #
+      # No browser setup action: the ubuntu runner images ship Google Chrome and export
+      # CHROME_BIN pointing at /usr/bin/google-chrome, which the script honours. The
+      # script fails rather than skips if no browser is found, so a runner that stopped
+      # shipping one would surface here instead of silently reporting coverage.
+      - name: Page transitions
+        run: pnpm run check:transitions
