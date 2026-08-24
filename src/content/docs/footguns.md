@@ -11,7 +11,8 @@ are just the physics of provisioning a cloud.
 ## 1. The verb decides whether anything is written
 
 `rackctl plan` is read-only. `rackctl apply` provisions and spends. `rackctl destroy`
-tears down and asks you to type the cluster name first.
+tears down and asks you to type the cluster name first — unless you pass `--yes`, which
+skips the prompt for CI and scripted teardowns.
 
 There is no mode flag: the intent is the verb, at the front of the line where it is read,
 rather than five characters at the end that make the dangerous command look almost exactly
@@ -33,10 +34,11 @@ is the usual cause. File early; check the Service Quotas console.
 
 ## 4. The account id must match your identity
 
-`cloud.accountId` must be exactly 12 digits **and** match the account your AWS
-profile actually resolves to. Preflight compares them and stops if they differ — a
-guard against provisioning into the wrong account. Run `aws sso login` for the
-right profile first.
+`cloud.accountId` must be 12 characters long — validation checks the length, nothing
+more — and must match the account your AWS profile actually resolves to. Both `rackctl
+check` and the preflight phase compare it against `sts get-caller-identity` and stop if
+they differ, which is the guard against provisioning into the wrong account. Run
+`aws sso login` for the right profile first.
 
 ## 5. Opt-in layers need their repos
 
@@ -56,18 +58,42 @@ or the agent platform will come up without the models it expects.
 
 ## 7. `destroy` is reverse and irreversible
 
-`rackctl destroy` removes cloud resources in the reverse of the apply
-order. There's no undo. The command prints the org, region, and environment in its
-title — read that line before you confirm. When in doubt, run it with `--dry-run`
-first and read the plan.
+`rackctl destroy` removes cloud resources in the reverse of the apply order. There's no
+undo. The command prints the org, **account id**, **profile**, region and environment in
+its title — the account and the profile are the two that decide *which cloud* is about to
+change, since a region is shared by every account you have. Read that line before you
+confirm. When in doubt, run it with `--dry-run` first and read the plan.
 
-## 8. Rollback can leave a partial state
+## 8. Rollback is the exception, not the rule
 
-If an `init` phase fails, the engine rolls back completed phases in reverse — but a
-teardown step can itself fail (a stuck finalizer, a dependency still in use). If
-that happens, the safest recovery is to fix the blocker and re-run, or
-`rackctl destroy` to clear the account. Use `--no-clean-on-failure` when you'd
-rather inspect the wreckage than have it cleaned up.
+Reading "a failed phase rolls back" as unconditional is the sharpest edge on this page,
+because it is wrong in both directions: it makes a re-apply look dangerous when it is not,
+and a failed optional phase look cleaned up when it is standing and billing.
+
+When it *does* roll back, it tears down every completed phase **and the phase that just
+failed**, in reverse. Including the failing phase is deliberate — a phase that dies partway
+has usually already created resources, and rolling back only the successes is what left
+seven IAM roles behind after a failed `cluster-addons`.
+
+It does not roll back at all in four cases:
+
+- **The failed phase is optional** — `fleet`, `portal` or `smoke`. Nothing is torn down,
+  the remaining phases still run, and the run exits non-zero at the end naming them. For
+  `smoke` the alternative is perverse: the check would destroy the thing it was checking,
+  and you would lose both the platform and the evidence.
+- **The platform was already standing**, or rackctl could not determine whether it was.
+  `rackctl apply` is re-runnable by design; against an existing cluster the early phases
+  succeed as no-ops and are recorded as completed, and rolling those back would destroy a
+  healthy VPC and EKS control plane this run did not build. The probe fails **closed**, so
+  an expired credential mid-run disables rollback rather than arming it.
+- **The failure declares itself un-rollbackable** — a failure to converge rather than to
+  provision. ArgoCD not settling inside 30 minutes is the cluster's problem, not the
+  cloud's, and destroying the cloud removes the only surface it can be diagnosed on.
+- **`--no-clean-on-failure` was passed**, when you would rather inspect the wreckage.
+
+A teardown step can also fail on its own (a stuck finalizer, a dependency still in use).
+Then the safest recovery is to fix the blocker and re-run, or `rackctl destroy` to clear
+the account.
 
 ## See also
 

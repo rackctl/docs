@@ -34,8 +34,9 @@ aws sso login --profile workload-dev
 rackctl check
 ```
 
-`doctor` checks the tools are present and that your AWS identity resolves. Fix
-anything it flags before continuing.
+`check` asserts what is knowable before you spend: the tools are present, your AWS
+identity resolves, and this install can succeed at all. Fix anything it flags before
+continuing.
 
 `rackctl apply` additionally runs a **preflight** gate that refuses to start when the
 install could not succeed — including a missing GitHub credential when your config needs
@@ -113,8 +114,8 @@ resources in place for debugging.
 rackctl check
 ```
 
-Once the cluster is up, `doctor` also checks it's reachable and that ArgoCD
-applications are present and syncing.
+Once the cluster is up, `check` also asserts the invariants of a provisioned platform —
+that it is reachable, and that ArgoCD's applications are present and syncing.
 
 ## 5. Hand off
 

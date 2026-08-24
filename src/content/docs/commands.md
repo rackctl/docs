@@ -1,6 +1,6 @@
 ---
 title: Commands
-description: Every rackctl subcommand — init, doctor, upgrade, destroy, version — with flags and behavior.
+description: Every rackctl subcommand — plan, apply, check, destroy, version — with flags and behavior.
 ---
 
 ```
@@ -11,15 +11,26 @@ Usage:
   rackctl [command]
 
 Available Commands:
-  init        Provision a nanohype platform from zero (full provision, AWS)
-  doctor      Check prerequisites and platform health
-  upgrade     Upgrade the platform to a newer nanohype release
+  apply       Provision a nanohype platform from zero (AWS)
+  check       Check whether an install can succeed, and whether a running platform is healthy
+  completion  Generate the autocompletion script for the specified shell
   destroy     Tear down a provisioned platform (reverse order)
+  help        Help about any command
+  plan        Show what a provision would do, without touching anything
   version     Print the rackctl version
+
+Flags:
+  -h, --help   help for rackctl
+
+Use "rackctl [command] --help" for more information about a command.
 ```
 
-All lifecycle commands read a [`rackctl.yaml`](/configuration/) and export
-`AWS_PROFILE` and `AWS_REGION` from it before shelling out.
+All lifecycle commands read a [`rackctl.yaml`](/configuration/) and resolve an AWS
+identity from it before shelling out: `AWS_PROFILE` and `AWS_REGION`, or — when
+[`cloud.assumeRole`](/configuration/#cloud) is set — the assumed session's
+`AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_SESSION_TOKEN` and `AWS_REGION`,
+with no `AWS_PROFILE` beside them. A profile left in the environment alongside
+explicit credentials is a second answer to the same question.
 
 ## plan
 
@@ -43,7 +54,9 @@ change. It is also the upgrade path: `apply` syncs the catalog fork from upstrea
 re-applies, so there is no separate upgrade command. A run that finds the platform already
 standing will not tear it down.
 
-`check` runs first as a gate and refuses to spend when it fails.
+The pre-spend half of [`check`](#check) runs first as a gate and refuses to spend when it
+fails. `--skip-preflight` is the only way past it. The platform-health half is not part of
+the gate — there is no platform to assert anything about yet.
 
 ```sh
 rackctl apply [flags]
@@ -81,7 +94,7 @@ Tears the platform down, running the landing-zone components in the **reverse** 
 the order they were applied.
 
 ```sh
-rackctl destroy [-c rackctl.yaml] [--yes] [--dry-run] [--force-buckets]
+rackctl destroy [-c rackctl.yaml] [--yes] [--dry-run] [--force-buckets] [--account-scoped]
 ```
 
 | Flag | Default | Description |
@@ -90,6 +103,7 @@ rackctl destroy [-c rackctl.yaml] [--yes] [--dry-run] [--force-buckets]
 | `--yes` | `false` | Skip the confirmation prompt, for CI and scripted teardowns. |
 | `--dry-run` | `false` | Show what would be destroyed and touch nothing. |
 | `--force-buckets` | `false` | Permit non-empty buckets to be emptied. Two acts — see below. |
+| `--account-scoped` | `false` | Also destroy the account-scoped agent-platform roots (Bedrock invocation logging, the cost pipeline). They are shared by every environment in the account — only for the last one. Pair with `--force-buckets`. |
 
 Teardown runs controller-owned resources first (Platforms, Tenants, NodeClaims,
 PVCs — so finalizers release their cloud resources while the controllers are still
@@ -116,23 +130,32 @@ recovery points to the backup account's DR region — is not reachable through r
 which has no field for it and does not apply the `backup` component.
 :::
 
-Two gaps it does **not** cover, both disclosed at runtime rather than papered over:
+The components it reaches are the ones that declare `force_destroy_buckets`:
+`agent-iam` (access logs, model artifacts, eval reports), `cluster-addons` (velero, loki,
+tempo, argo-workflows), `model-import` (the staging bucket) and `druid` (the per-tenant
+buckets). druid is covered end to end — the permitting apply clears its Aurora
+`deletion_protection` in the same act that lands `force_destroy`, so act 2 reaches both
+the buckets and the DB cluster.
 
-- **druid outside development.** Its Aurora carries `deletion_protection = true`,
-  pinned in the staging and production leaves inside a `map(object)` no `TF_VAR` can
-  reach without replacing the leaf's sizing too. rackctl refuses that teardown rather
-  than deleting the deepstorage segments and then wedging on `DeleteDBCluster`. Clear
-  `deletion_protection` out of band first.
-- **eks-agent-platform's `bedrock` and `cost-pipeline` buckets**, which do not accept
-  `force_destroy_buckets` at all yet.
+The eks-agent-platform tree's account-scoped buckets are reachable too, with one more
+flag and one caveat, both disclosed at apply time rather than papered over:
+
+- **`--account-scoped` is required** to reach `bedrock-account` and `cost-pipeline` at
+  all. `cost-pipeline` takes `force_destroy_buckets`; `bedrock-account` derives
+  `force_destroy` from `object_lock_mode != "COMPLIANCE"`, which `live/org` pins to
+  GOVERNANCE for exactly this reason. So `rackctl destroy --account-scoped
+  --force-buckets` takes them down.
+- **Bedrock's invocations bucket carries per-object GOVERNANCE retention**, so that path
+  needs `s3:BypassGovernanceRetention` on the caller. rackctl neither declares nor checks
+  it.
 
 :::danger
 `rackctl destroy` removes cloud resources and is not reversible. Confirm the
 account, profile, region and environment in the printed title before you run it:
 
 ```
-rackctl destroy — acme · 351619759866 · stxkxs · us-west-2 · development
-                  org    account        profile   region      environment
+rackctl destroy — acme · 000000000000 · acme-platform · us-west-2 · development
+                  org    account        profile        region      environment
 ```
 
 The account and the profile are the two that decide *which cloud* is about to
@@ -156,8 +179,9 @@ Prints the version, set at build time via `-ldflags`.
 
 ## Global behavior
 
-- **Dry-run is the default** for `init` and `destroy`. Nothing changes in the
-  cloud. `plan` never writes; `apply` and `destroy` always do.
+- **The verb decides whether anything is written**, and nothing dry-runs by default.
+  `plan` is read-only; `apply` writes; `destroy` writes unless `--dry-run` is passed,
+  and asks you to type the cluster name first unless `--yes` is.
 - Config is validated before any command does work — see
   [validation](/configuration/#validation).
 - Errors and usage are printed cleanly (no cobra stack noise) so failures are easy
