@@ -13,8 +13,9 @@ aws sso login --profile <your-profile>
 rackctl check
 ```
 
-`doctor` confirms the tools are present and your AWS identity resolves. Don't
-proceed until it's clean — every downstream phase assumes both.
+With no cluster yet, `check` runs the pre-spend set: the tools are present, your AWS
+identity resolves and matches `cloud.accountId`, and nothing is left over from a previous
+attempt. Don't proceed until it's clean — every downstream phase assumes all of it.
 
 ## 2. Review the config
 
@@ -58,8 +59,9 @@ rackctl apply -c rackctl.yaml --no-clean-on-failure
 rackctl check
 ```
 
-With a cluster up, `doctor` also checks it's reachable and that ArgoCD applications
-are present and syncing. Then spot-check directly:
+With a cluster up, `check` also asserts the invariants of a provisioned platform — that
+it is reachable, and that ArgoCD's applications are present and syncing. Then spot-check
+directly:
 
 ```sh
 kubectl get nodes
@@ -92,7 +94,7 @@ rackctl destroy -c rackctl.yaml            # reverse teardown (confirms first)
 
 | Symptom | Likely cause | Fix |
 |---------|--------------|-----|
-| `doctor` reports missing tools | A prerequisite isn't on `PATH` | [Install it](/install/#prerequisites) |
+| `check` reports missing tools | A prerequisite isn't on `PATH` | [Install it](/install/#prerequisites) |
 | `aws identity unavailable` | SSO session expired | `aws sso login --profile <profile>` |
 | Preflight stops on account mismatch | `cloud.accountId` ≠ resolved account | Fix the id or switch profiles |
 | Cluster phase hangs on capacity | Unapproved vCPU quota | Check Service Quotas; wait for the increase |

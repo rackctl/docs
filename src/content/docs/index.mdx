@@ -14,11 +14,11 @@ substrate, EKS cluster, GitOps, controllers, and the operator portal, provisione
 from zero and left reconciling on its own.
 
 <Code
-  code={`# dry-run plan (default)
-rackctl init -c rackctl.yaml
+  code={`# read-only — prints every command a provision would run
+rackctl plan -c rackctl.yaml
 
 # provision for real
-rackctl init -c rackctl.yaml --apply`}
+rackctl apply -c rackctl.yaml`}
   lang="sh"
   title="from empty account to running platform"
 />
@@ -27,13 +27,14 @@ rackctl init -c rackctl.yaml --apply`}
 
 <CardGrid>
   <Card title="Full provision" icon="rocket">
-    Cloud, cluster, IAM/Identity Center, GitOps, CRDs, operator, and optional
-    portal — all from an empty AWS account. Not attach-to-existing; the whole
-    stack, from scratch.
+    Cloud, cluster, IAM, GitOps, CRDs, operator, and optional portal — all from an
+    empty AWS account. It builds the whole stack rather than attaching to one, though
+    it will join a VPC someone else owns via `cluster.network.mode: adopt`.
   </Card>
-  <Card title="Dry-run by default" icon="approve-check">
-    Every `init` is a plan until you pass `--apply`. Review exactly what will be
-    created before a single cloud resource exists.
+  <Card title="The verb is the intent" icon="approve-check">
+    `rackctl plan` prints every command a provision would run and creates nothing;
+    `rackctl apply` provisions. No mode flag — the dangerous invocation does not
+    differ from the safe one by four characters at the end of a line.
   </Card>
   <Card title="Orchestrates, doesn't rewrite" icon="setting">
     A thin engine over `tofu`, `terragrunt`, `kubectl`, `helm`, `aws`, `git`, and
@@ -41,24 +42,26 @@ rackctl init -c rackctl.yaml --apply`}
     eks-agent-platform — it doesn't reimplement them.
   </Card>
   <Card title="Reversible" icon="trash">
-    A phase that fails rolls back in reverse. `rackctl destroy` tears the whole
-    platform down in the opposite order it was built.
+    A phase that fails while this run was building the platform rolls back in reverse.
+    A re-apply against a cluster that was already standing does not — that platform
+    is not this run's to destroy. `rackctl destroy` tears the whole thing down in the
+    opposite order it was built.
   </Card>
 </CardGrid>
 
 ## The shape of a run
 
-`rackctl init` walks an ordered pipeline. Phases 0–6 are the core 0→running path;
-7–9 are opt-in layers you enable in `rackctl.yaml`.
+`rackctl plan` and `rackctl apply` walk the same ordered pipeline. Phases 0–6 are the
+core 0→running path; 7–9 are opt-in layers you enable in `rackctl.yaml`.
 
 | # | Phase | What happens |
 |---|-------|--------------|
 | 0 | Preflight | Tools, AWS identity, and service quotas |
 | 1 | Acquire | Clone + fork the platform repos |
-| 2 | Identity | Identity Center and the Terraform state backend |
+| 2 | Identity | AWS identity and the S3 Terraform state backend |
 | 3 | Cluster | Network and the EKS cluster |
-| 4 | GitOps | Secrets and the ArgoCD bootstrap |
-| 5 | Addons | Addon convergence and IRSA account-id writeback |
+| 4 | Substrate | IAM, Pod Identity, buckets, monitoring, and the IRSA account-id writeback |
+| 5 | GitOps | The ArgoCD bootstrap and addon convergence |
 | 6 | Platform | Agent-platform substrate, CRDs, and the operator |
 | 7 | Fleet *(opt-in)* | Crossplane cluster control plane |
 | 8 | Portal *(opt-in)* | The day-2 operator UI |
