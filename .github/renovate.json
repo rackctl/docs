@@ -1,79 +1,35 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "description": [
-    "Renovate posture for rackctl/docs.",
-    "WHY NOT A SHARED PRESET: rackctl/.github publishes none, so there is nothing to extend. This is a small, single-purpose static site — Astro + Starlight, a private theme package, two fontsource families and a lint/typecheck toolchain. Inheriting a platform preset would arrive with rules for gomod, helm and k8s.io that match nothing here.",
-    "TITLE CONTRACT: 'deps' is the semantic SCOPE, never the semantic TYPE. The repo's history is conventional (ci(deploy):, fix(docs):, docs(configuration):); a 'deps:' type sits outside the conventional set and would be unmergeable behind any title gate, silently, because a repo without such a gate merges it happily."
+    "Renovate posture for rackctl/docs. The org preset github>rackctl/.github supplies the shared posture: the three-day release-age floor, vulnerability alerts that skip it, the weekly schedule, digest-pinned actions, lock file maintenance, and the @shuttering registry credentials. Only what is specific to this Astro + Starlight site is stated here.",
+    "TITLE CONTRACT: the preset's titles are chore(deps): — 'deps' is the semantic SCOPE, never the TYPE. The repo's history is conventional (ci(deploy):, fix(docs):, docs(configuration):); a 'deps:' type would sit outside the conventional set.",
+    "ORDERING: these packageRules are appended after the preset's, and later rules win. None sets automerge or minimumReleaseAge, so the preset's no-automerge stance and age floor hold for every rule below."
   ],
-  "extends": [
-    "config:recommended",
-    ":semanticCommits",
-    ":semanticCommitTypeAll(chore)",
-    ":dependencyDashboard"
-  ],
-  "hostRules": [
-    {
-      "description": "Credentials for the @shuttering scope, which .npmrc maps to GitHub Packages. matchHost must be the full URL with its trailing slash so it agrees with the registryUrl .npmrc supplies; a bare hostname does not match and the lookup falls back to npmjs, where this scope publishes behind.",
-      "matchHost": "https://npm.pkg.github.com/",
-      "hostType": "npm",
-      "token": "{{ secrets.SHUTTERING_NPM_TOKEN }}"
-    }
-  ],
-  "timezone": "America/Los_Angeles",
-  "schedule": ["before 9am on monday"],
-  "prConcurrentLimit": 3,
-  "labels": ["dependencies"],
-  "lockFileMaintenance": { "enabled": true },
+  "extends": ["github>rackctl/.github"],
   "packageRules": [
     {
-      "description": [
-        "Astro and Starlight move as ONE PR. @astrojs/starlight declares a peer range on astro (currently ^7.0.0), so bumping astro across a major without starlight — or the reverse — produces a lockfile that cannot resolve. Separate PRs would each be green in isolation and break on merge order."
-      ],
+      "description": "Astro and Starlight move as ONE PR. @astrojs/starlight declares a peer range on astro, so bumping astro across a major without starlight, or the reverse, produces a lockfile that cannot resolve. Separate PRs would each be green in isolation and break on merge order.",
       "groupName": "astro + starlight",
       "matchPackageNames": ["astro", "@astrojs/**"]
     },
     {
       "description": [
-        "The @shuttering/* packages resolve from npm.pkg.github.com (see .npmrc), read with the hostRules token above. Pinned exact, like biome and for a stronger reason: this is a private design system, a bump can change how every page renders, and a caret is what let a broken theme version sit installed while a fix was already published. An exact pin forces a visible PR.",
+        "The @shuttering/* packages resolve from npm.pkg.github.com (see .npmrc). Pinned exact: this is a private design system, a bump can change how every page renders, and a caret is what let a broken theme version sit installed while a fix was already published. An exact pin forces a visible PR.",
         "npmjs carries this scope too, but behind. A version this repo cannot see is a credential problem, never a reason to repoint the registry."
       ],
       "matchPackageNames": ["@shuttering/**"],
       "rangeStrategy": "pin"
     },
     {
-      "description": [
-        "Typefaces are content, not behaviour: a fontsource bump changes glyph files, never an API. Group and automerge on minor/patch to keep them out of the review queue."
-      ],
+      "description": "Typefaces are content, not behaviour: a fontsource bump changes glyph files, never an API. Minor and patch bumps share one PR.",
       "groupName": "fontsource",
       "matchPackageNames": ["@fontsource-variable/**"],
-      "matchUpdateTypes": ["minor", "patch"],
-      "automerge": true
+      "matchUpdateTypes": ["minor", "patch"]
     },
     {
-      "description": [
-        "Biome is pinned to an exact version on purpose — the lockfile, not a range, is what makes CI's lint gate reproducible. Renovate should still move that pin, just visibly and on its own."
-      ],
+      "description": "Biome is pinned to an exact version: the lockfile, not a range, is what makes CI's lint gate reproducible. Renovate still moves that pin, visibly and on its own.",
       "matchPackageNames": ["@biomejs/biome"],
       "rangeStrategy": "pin"
-    },
-    {
-      "description": [
-        "Pinned action SHAs and versions are a supply-chain control, including the osv-scanner gate itself. Keep them current — a stale scanner is a scanner that has stopped finding things."
-      ],
-      "groupName": "github actions",
-      "matchManagers": ["github-actions"]
-    },
-    {
-      "description": [
-        "fast-uri and postcss are held in pnpm.overrides to clear advisories osv-scanner gates on. Renovate may raise them; it must never drop below the pinned floor, which the override itself enforces."
-      ],
-      "matchPackageNames": ["fast-uri", "postcss"],
-      "matchManagers": ["npm"]
     }
-  ],
-  "vulnerabilityAlerts": {
-    "description": "Security fixes bypass the weekly schedule — osv-scanner already fails CI on a known advisory, so a held security bump blocks every unrelated PR too.",
-    "schedule": ["at any time"],
-    "labels": ["dependencies", "security"]
-  }
+  ]
 }
