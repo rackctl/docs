@@ -8,17 +8,27 @@ on:
 permissions:
   contents: read
 
+# A superseded push to the same ref has nothing left to prove.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
+    name: build
     runs-on: ubuntu-latest
     steps:
+      # persist-credentials: false keeps the job token out of .git/config, where every
+      # later step could read it. Nothing here pushes to or fetches this repository.
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
 
       - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
 
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
-          node-version: 24
+          node-version-file: .nvmrc
           cache: pnpm
 
       # Every @shuttering/* package — starlight, error-pages and its tokens dep —
@@ -30,10 +40,8 @@ jobs:
       # because pnpm stopped expanding environment variables in registry
       # credentials that come from a PROJECT .npmrc in 10.34.2 — that file is
       # committed, so a malicious edit could forward the secret to an
-      # attacker-controlled registry. It now warns and IGNORES the line. The
-      # repo pins pnpm@10.32.1, so the old form still works today and would
-      # have gone on working until some routine bump crossed 10.34.2 and the
-      # install started resolving @shuttering/* unauthenticated against npmjs,
+      # attacker-controlled registry. It now warns and IGNORES the line, so
+      # the install would resolve @shuttering/* unauthenticated against npmjs,
       # where they do not exist. `pnpm config set` writes to a trusted
       # user-level config that pnpm still honours, and is what pnpm's own
       # warning recommends. Matches rackctl/web.
