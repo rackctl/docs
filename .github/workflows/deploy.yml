@@ -15,6 +15,12 @@ jobs:
   deploy:
     name: deploy
     runs-on: ubuntu-latest
+    # The production environment carries a deployment-branch rule limiting it to
+    # main. Running here changes the job's OIDC subject from the ref to
+    # `environment:production`, which the deploy role in rackctl/infra admits.
+    environment:
+      name: production
+      url: https://docs.rackctl.sh
     # id-token: write lets configure-aws-credentials exchange the job's OIDC token for
     # the deploy role. It is granted here rather than at the workflow level so that a
     # job added to this file later does not inherit it.
